@@ -1,2 +1,2 @@
-
-<router-outlet />
+<app-sidebar-menu [isSidebarMenuCollapsed]="isSidebarMenuCollapsed()" (changeIsSidebarMenuCollapsed)="changeIsSidebarMenuCollapsed($event)"></app-sidebar-menu>
+<app-main [isSidebarMenuCollapsed]="isSidebarMenuCollapsed()" [screenWidth]="screenWidth()"></app-main>
