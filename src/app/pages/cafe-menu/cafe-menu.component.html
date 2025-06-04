@@ -1,1 +1,57 @@
-<h2>Kategori: {{categorySlug()}}</h2>
+<nav class="category-nav">
+    <h2>Kategorier</h2>
+
+    <ul class="category-list" [class.disabled]="isLoading()" [ngClass]="isCategoriesDown() ? '' : 'closed'">
+        @for (category of categories(); track category.id) {
+        <li class="item" [ngClass]="activeCategorySlug() === category.name.slug ? 'active' : ''"
+            (click)="navigateToCategory(category)" tabindex="0">
+            {{category.name.normal}}
+        </li>
+        }
+    </ul>
+    <button class="button close-btn" (click)="toggleCategoriesList()">
+        @if (isCategoriesDown()) {
+        <i class="fa-solid fa-chevron-up"></i>
+        } @else {
+        <i class="fa-solid fa-chevron-down"></i>
+        }
+    </button>
+</nav>
+
+<div class="products-container">
+    <div class="products-frame">
+        <h3>Meny</h3>
+        @if (isLoading()) {
+        <div class="loading-products">
+            Laddar produkter...
+        </div>
+        } @else {
+        <div class="products-list-div">
+            @for (item of products(); track item.id) {
+            <article class="item" (click)="productDetails(item)" [title]="setTitle(item.name.normal)">
+                <div class="price">{{item.price}} SEK</div>
+                <div class="image-holder">
+                    <img src="defaultimage.jpg" width="100" height="100">
+                </div>
+                <div class="header-desc">
+                    <h4>{{item.name.normal}}</h4>
+                    <p class="description">{{item.description}}</p>
+                </div>
+                <p class="rating">
+                    {{setRating(item.rating)}}
+                </p>
+            </article>
+            }
+        </div>
+        }
+        <div class="pagination-controls">
+            <button class="previous" (click)="previous()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <p>Sida {{pagination().currentPage}} av {{pagination().totalPages}}</p>
+            <button class="next" (click)="next()">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>

@@ -14,7 +14,7 @@
         @for (item of items; track $index) {
         <li class="sidenav-nav-item">
             <a class="sidenav-nav-link" [routerLink]="item.routeLink" routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }">
+                [routerLinkActiveOptions]="{ exact: false }">
                 <i class="sidenav-link-icon" [class]="item.icon"></i>
                 @if (!isSidebarMenuCollapsed()) {
                 <span class="sidenav-link-text">{{item.label}}</span>
