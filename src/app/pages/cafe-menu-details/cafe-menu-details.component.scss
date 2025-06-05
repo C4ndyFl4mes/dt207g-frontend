@@ -1,0 +1,208 @@
+.product-container {
+    padding-top: 6rem;
+    width: 55rem;
+    max-width: 95%;
+    margin: 0 auto;
+}
+
+.product-frame {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: #1b0020bb;
+    box-shadow: 0.063rem 0 1.25rem 0 #ce12a5;
+    min-height: 67rem;
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
+.breadcrumbs {
+    margin-top: 0;
+}
+
+.product {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.image-holder {
+    max-width: 350px;
+    aspect-ratio: 1/1;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.reviews-section {
+    margin-top: 2rem;
+}
+
+.rating {
+    width: fit-content;
+    padding: 0.5rem 2rem 0.5rem 2rem;
+    border-radius: 1rem;
+    background-color: rgba(255, 217, 0, 0.253);
+    box-shadow: 0.063rem 0 1.25rem 0 gold;
+    font-weight: 700;
+}
+
+.post-review {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    h4 {
+        margin-top: 2rem;
+        margin-bottom: 0;
+    }
+    label {
+        display: flex;
+        flex-direction: column;
+        row-gap: 0.3rem;
+    }
+    .rating-label {
+        width: 5rem;
+    }
+    .message-label {
+        width: 30rem;
+        max-width: 95%;
+        textarea {
+            height: 4rem;
+        }
+    }
+    button {
+        width: fit-content;
+        padding: 0.5rem 2rem 0.5rem 2rem;
+        cursor: pointer;
+        white-space: nowrap;
+        background-color: rgba(255, 217, 0, 0.253);
+        border: none;
+        color: #fff;
+        height: 2rem;
+        border-radius: 1rem;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+            background-color: rgba(255, 217, 0, 0.397);
+        }
+
+        &:active {
+            background-color: rgba(255, 217, 0, 0.685);
+        }
+    }
+    input {
+        line-height: 1.2rem;
+        text-align: center;
+    }
+    input, textarea {
+        font-size: 1rem;
+        background-color: #1b00205d;
+        color: #fff;
+        border: 1px ridge gold;
+        border-radius: 1rem;
+    }
+}
+
+.reviews {
+    margin-top: 3rem;
+    article {
+        padding: 0.5rem 2rem 0.5rem 2rem;
+        background-color: #1b0020de;
+        border: 1px ridge gold;
+        border-radius: 1rem;
+    }
+    div {
+        display: flex;
+        justify-content: right;
+        align-items: center;
+        column-gap: 1rem;
+    }
+    .timestamp {
+       font-size: 0.7rem; 
+    }
+    .delete-review {
+        width: fit-content;
+        padding: 0.5rem 2rem 0.5rem 2rem;
+        cursor: pointer;
+        white-space: nowrap;
+        background-color: rgba(255, 217, 0, 0.253);
+        border: none;
+        color: #fff;
+        height: 2rem;
+        border-radius: 1rem;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+            background-color: rgba(255, 217, 0, 0.397);
+        }
+
+        &:active {
+            background-color: rgba(255, 217, 0, 0.685);
+        }
+    }
+}
+
+.pagination-controls {
+    max-width: 220px;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    white-space: nowrap;
+    height: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0.063rem 0 1.25rem 0 gold;
+
+    button {
+        flex: 1;
+        cursor: pointer;
+        background-color: rgba(255, 217, 0, 0.253);
+        border: none;
+        color: #fff;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+            background-color: rgba(255, 217, 0, 0.397);
+        }
+
+        &:active {
+            background-color: rgba(255, 217, 0, 0.685);
+        }
+    }
+
+    p {
+        height: 2rem;
+        padding: 0 1rem 0 1rem;
+        margin: -1rem;
+        display: flex;
+        align-items: center;
+
+        background-color: rgba(255, 217, 0, 0.253);
+        border-left: none;
+        border-right: none;
+    }
+
+    .previous {
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+
+    .next {
+        border-top-right-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+    }
+}

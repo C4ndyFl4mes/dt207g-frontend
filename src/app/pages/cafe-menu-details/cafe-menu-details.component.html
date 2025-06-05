@@ -1,1 +1,60 @@
-<h2>Kategori: {{categorySlug()}} Produkt: {{itemSlug()}}</h2>
+<div class="product-container">
+    <div class="product-frame">
+        <p class="breadcrumbs">
+            <span>Meny</span> >
+            <span>{{product().inCategory.name.normal}}</span> >
+            <span>{{product().name.normal}}</span>
+        </p>
+        <div class="product">
+            <div class="image-holder">
+                <img src="defaultimage_large.jpg" width="350" height="350">
+            </div>
+            <article class="header-desc">
+                <h2>{{product().name.normal}}</h2>
+                <p class="description">{{product().description}}</p>
+            </article>
+        </div>
+        <div class="reviews-section">
+            <h3>Recensioner</h3>
+            <div class="rating">{{setAVGRating(product().rating)}} ★</div>
+            <div class="post-review">
+                <h4>Skriv en recension</h4>
+                <label class="rating-label">
+                    <span>Betyg:</span>
+                    <input type="number" name="rating" min="1" max="5" [(ngModel)]="reviewInput.rating">
+                </label>
+                <label class="message-label">
+                    <span>Meddelande:</span>
+                    <textarea name="message" [(ngModel)]="reviewInput.message"></textarea>
+                </label>
+                <button (click)="postReview()">Lägg till</button>
+            </div>
+            <div class="reviews">
+                <div class="pagination-controls">
+                    <button class="previous" (click)="previous()">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <p>Sida {{this.reviews_section().pagination.currentPage}} av {{this.reviews_section().pagination.totalPages}}</p>
+                    <button class="next" (click)="next()">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                @for (item of reviews_section().reviews; track item.id) {
+                <article>
+                    @if (item.rating === 1) {
+                    <h4>{{item.fullname}} gav <span>{{item.rating}}</span> stjärna</h4>
+                    } @else {
+                    <h4>{{item.fullname}} gav <span>{{item.rating}}</span> stjärnor</h4>
+                    }
+                    <p>{{item.message}}</p>
+                    <div>
+                        <span class="timestamp">{{item.posted}}</span>
+                        <button class="delete-review" (click)="deleteReview()">Ta bort</button>
+                    </div>
+                </article>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
