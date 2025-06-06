@@ -17,28 +17,67 @@
         <div class="reviews-section">
             <h3>Recensioner</h3>
             <div class="rating">{{setAVGRating(product().rating)}} ★</div>
+            @if (loggedIn() && alreadyPostedOnProduct()) {
             <div class="post-review">
                 <h4>Skriv en recension</h4>
                 <label class="rating-label">
                     <span>Betyg:</span>
                     <input type="number" name="rating" min="1" max="5" [(ngModel)]="reviewInput.rating">
                 </label>
-                <label class="message-label">
-                    <span>Meddelande:</span>
-                    <textarea name="message" [(ngModel)]="reviewInput.message"></textarea>
-                </label>
-                <button (click)="postReview()">Lägg till</button>
-            </div>
-            <div class="reviews">
-                <div class="pagination-controls">
-                    <button class="previous" (click)="previous()">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                    <p>Sida {{this.reviews_section().pagination.currentPage}} av {{this.reviews_section().pagination.totalPages}}</p>
-                    <button class="next" (click)="next()">
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </button>
+                <div class="message-section">
+                    <label class="message-label">
+                        <span>Meddelande:</span>
+                        <textarea name="message" [(ngModel)]="reviewInput.message" (focus)="posting.set(true)"
+                            (blur)="posting.set(false)"></textarea>
+                    </label>
+                    <div class="buttons" [class]="posting() ? 'posting' : ''">
+                        <button class="add" (click)="postReview()" (focus)="posting.set(true)"
+                            (blur)="posting.set(false)" (click)="posting.set(false)">Lägg till</button>
+                        <button class="cancel" (click)="cancelPost()" (focus)="posting.set(true)"
+                            (blur)="posting.set(false)" (click)="posting.set(false)">Avbryt</button>
+                    </div>
                 </div>
+            </div>
+            } @else {
+            @if (!alreadyPostedOnProduct()) {
+            <div class="post-review">
+
+            </div>
+            } @else {
+            <div class="post-review">
+                Logga in för att skriva recensioner!
+            </div>
+            }
+            }
+            @if (reviews_section().pagination.totalPages > 0) {
+            <div class="pagination-controls">
+                <button class="previous" (click)="previous()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <p>Sida {{this.reviews_section().pagination.currentPage}} av
+                    {{this.reviews_section().pagination.totalPages}}</p>
+                <button class="next" (click)="next()">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+            } @else {
+            @if (!isLoading()) {
+            <div class="loading-reviews">
+                Lägg till den första recensionen!
+            </div>
+            }
+            }
+            <div class="reviews">
+                @if (isLoading()) {
+                <div class="loading-reviews">
+                    Laddar recensioner...
+                </div>
+                } @else {
+                @if (loadingError()) {
+                <div class="loading-reviews">
+                    {{loadingError()}}
+                </div>
+                } @else {
                 @for (item of reviews_section().reviews; track item.id) {
                 <article>
                     @if (item.rating === 1) {
@@ -49,9 +88,14 @@
                     <p>{{item.message}}</p>
                     <div>
                         <span class="timestamp">{{item.posted}}</span>
-                        <button class="delete-review" (click)="deleteReview()">Ta bort</button>
+                        @if (userOwnThisReview(item.createdBy) || checkRole()) {
+                        <button class="delete-review" (click)="deleteReview(item.id)">Ta bort</button>
+                        }
+
                     </div>
                 </article>
+                }
+                }
                 }
             </div>
         </div>

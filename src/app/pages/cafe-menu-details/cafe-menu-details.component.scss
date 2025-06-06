@@ -57,7 +57,12 @@
 .post-review {
     display: flex;
     flex-direction: column;
+
     row-gap: 1rem;
+
+    .message-section {
+        position: relative;
+    }
     h4 {
         margin-top: 2rem;
         margin-bottom: 0;
@@ -71,10 +76,27 @@
         width: 5rem;
     }
     .message-label {
-        width: 30rem;
-        max-width: 95%;
+        width: 100%;
+        // max-width: 95%;
         textarea {
-            height: 4rem;
+            height: 6rem;
+            padding: 0.5rem;
+        }
+    }
+    .buttons {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: none;
+    }
+    .posting {
+        display: flex;
+
+        .add {
+            border-top-left-radius: 1rem;
+        }
+        .cancel {
+            border-bottom-right-radius: 1rem;
         }
     }
     button {
@@ -86,7 +108,6 @@
         border: none;
         color: #fff;
         height: 2rem;
-        border-radius: 1rem;
         transition: background-color 0.2s ease-in-out;
 
         &:hover {
@@ -101,7 +122,8 @@
         line-height: 1.2rem;
         text-align: center;
     }
-    input, textarea {
+    input,
+    textarea {
         font-size: 1rem;
         background-color: #1b00205d;
         color: #fff;
@@ -110,50 +132,12 @@
     }
 }
 
-.reviews {
-    margin-top: 3rem;
-    article {
-        padding: 0.5rem 2rem 0.5rem 2rem;
-        background-color: #1b0020de;
-        border: 1px ridge gold;
-        border-radius: 1rem;
-    }
-    div {
-        display: flex;
-        justify-content: right;
-        align-items: center;
-        column-gap: 1rem;
-    }
-    .timestamp {
-       font-size: 0.7rem; 
-    }
-    .delete-review {
-        width: fit-content;
-        padding: 0.5rem 2rem 0.5rem 2rem;
-        cursor: pointer;
-        white-space: nowrap;
-        background-color: rgba(255, 217, 0, 0.253);
-        border: none;
-        color: #fff;
-        height: 2rem;
-        border-radius: 1rem;
-        transition: background-color 0.2s ease-in-out;
-
-        &:hover {
-            background-color: rgba(255, 217, 0, 0.397);
-        }
-
-        &:active {
-            background-color: rgba(255, 217, 0, 0.685);
-        }
-    }
-}
-
 .pagination-controls {
     max-width: 220px;
     width: 90%;
     margin: 0 auto;
-    margin-bottom: 1rem;
+    margin-top: 3rem;
+    
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -187,7 +171,7 @@
     p {
         height: 2rem;
         padding: 0 1rem 0 1rem;
-        margin: -1rem;
+
         display: flex;
         align-items: center;
 
@@ -204,5 +188,51 @@
     .next {
         border-top-right-radius: 1rem;
         border-bottom-right-radius: 1rem;
+    }
+}
+
+.loading-reviews {
+    align-self: center;
+}
+
+.reviews {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column-reverse;
+    row-gap: 2rem;
+    article {
+        padding: 0.5rem 2rem 0.5rem 2rem;
+        background-color: #1b0020de;
+        border: 1px ridge gold;
+        border-radius: 1rem;
+    }
+    div {
+        display: flex;
+        justify-content: right;
+        align-items: center;
+        column-gap: 1rem;
+    }
+    .timestamp {
+        font-size: 0.7rem;
+    }
+    .delete-review {
+        width: fit-content;
+        padding: 0.5rem 2rem 0.5rem 2rem;
+        cursor: pointer;
+        white-space: nowrap;
+        background-color: rgba(255, 217, 0, 0.253);
+        border: none;
+        color: #fff;
+        height: 2rem;
+        border-radius: 1rem;
+        transition: background-color 0.2s ease-in-out;
+
+        &:hover {
+            background-color: rgba(255, 217, 0, 0.397);
+        }
+
+        &:active {
+            background-color: rgba(255, 217, 0, 0.685);
+        }
     }
 }

@@ -12,7 +12,7 @@
     </div>
     <div class="sidenav-nav">
         @for (item of items; track $index) {
-        <li class="sidenav-nav-item">
+        <li class="sidenav-nav-item" [class]="canSeeItem(item.routeLink) ? '' : 'hide'">
             <a class="sidenav-nav-link" [routerLink]="item.routeLink" routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: false }">
                 <i class="sidenav-link-icon" [class]="item.icon"></i>

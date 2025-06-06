@@ -5,6 +5,8 @@ import { Product } from '../../models/product';
 import { Review } from '../../models/review';
 import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
+import { AccountService } from '../../services/account.service';
+import { ReviewService } from '../../services/review.service';
 
 @Component({
   selector: 'app-cafe-menu-details',
@@ -14,9 +16,24 @@ import { FormsModule } from '@angular/forms';
 })
 export class CafeMenuDetailsComponent implements OnInit {
 
-  categorySlug = signal<string | null>("");
-  itemSlug = signal<string | null>("");
-  isLoading = signal<boolean>(false);
+  loggedIn = signal<boolean>(false); // Håller reda på om användaren är inloggad eller inte.
+
+  categorySlug = signal<string | null>(""); // Kategori i params.
+  itemSlug = signal<string | null>(""); // Produkten i params.
+  isLoading = signal<boolean>(false); // Håller reda på om produkten laddas in.
+
+  posting = signal<boolean>(false); // Håller reda på om användaren håller på att lägga till en recension.
+  alreadyPostedOnProduct = signal<boolean>(false); // Håller reda på om användaren har redan lagt till en recension på nuvarande produkt.
+
+  loadingError = signal<string | null>(null); // Utifall det blir inladdningsfel.
+
+  // Inmatningsfälten för recension.
+  reviewInput = {
+    rating: 3,
+    message: ""
+  }
+
+  // Startvärde för nuvarande produkt.
   product = signal<Product>({
     id: "",
     name: {
@@ -34,6 +51,8 @@ export class CafeMenuDetailsComponent implements OnInit {
       }
     }
   });
+
+  // Startvärde för recensionsektionen.
   reviews_section = signal<{ pagination: Pagination; reviews: Array<Review> }>({
     pagination: {
       currentPage: 1,
@@ -44,43 +63,67 @@ export class CafeMenuDetailsComponent implements OnInit {
     reviews: []
   });
 
-  reviewInput = {
-    rating: 3,
-    message: ""
-  }
+  /**
+   * 
+   * @param router - 
+   * @param route - hanterar parametrar från url:en.
+   * @param cafeService - hanterar produkter.
+   * @param accountService - hanterar konton.
+   * @param reviewService  - hanterar recensioner.
+   */
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private cafeService: CafeService,
+    private accountService: AccountService,
+    private reviewService: ReviewService
+  ) { }
 
-  
-
-  constructor(private router: Router, private route: ActivatedRoute, private cafeService: CafeService) {}
-  
+  /**
+   * Hämtar parametrarna för kategori och produkt från url:en, därefter kallar loadProduct som använder parametrarna.
+   * Kallar isLoggedIn som sätter inloggningsstatus på loggedIn.
+   */
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.categorySlug.set(params.get("categoryslug"));
       this.itemSlug.set(params.get("itemslug"));
+      this.isLoggedIn();
       this.loadProduct();
     });
-    
   }
 
+   /**
+   * Sätter inloggningsstatus för användaren. Används för att dölja lägga till recension.
+   */
+  isLoggedIn(): void {
+    this.accountService.isLoggedIn.subscribe((loggedIn) => {
+      this.loggedIn.set(loggedIn);
+    });
+  }
+
+  /**
+   * Laddar in produkter utifrån parametrarna i url:en samt vilken sida användaren är på.
+   */
   loadProduct(): void {
-    this.isLoading.set(true); 
+    this.isLoading.set(true); // Pågörjar inladdning.
     this.cafeService.getProduct(this.categorySlug()!, this.itemSlug()!, this.reviews_section().pagination.currentPage, this.reviews_section().pagination.pageSize).subscribe({
       next: (response) => {
         this.product.set(response.data.product);
         this.reviews_section.set(response.data.reviews_section);
-        this.isLoading.set(false);
-        console.log(response.data);
+        this.isLoading.set(false); // Avslutar inladdning.
+        this.postedAlready(); // Anropas för att kolla om användaren har redan lagt till en recension.
       },
       error: () => {
         this.isLoading.set(false);
+        this.loadingError.set("Inladdningsfel"); // Vet inte om den kommer hit, har inte lyckats med det.
       }
     });
-    
+
   }
 
-   /**
-   * Föregående menysida.
-   */
+  /**
+  * Föregående menysida.
+  */
   previous(): void {
     const current = this.reviews_section().pagination.currentPage;
     const total = this.reviews_section().pagination.totalPages;
@@ -98,25 +141,111 @@ export class CafeMenuDetailsComponent implements OnInit {
     const total = this.reviews_section().pagination.totalPages;
     const newPage = current === total ? 1 : current + 1;
 
-     this.reviews_section().pagination.currentPage = newPage;
+    this.reviews_section().pagination.currentPage = newPage;
     this.loadProduct();
   }
 
+  /**
+   * Beräknar en avrundning.
+   * @param rating - betyg.
+   * @returns en sträng som visar betyget med upp till två decimaler.
+   */
   setAVGRating(rating: number): string {
     let r = Math.round(rating * 100) / 100;
 
-    if (r % 1 === 0 ) {
+    if (r % 1 === 0) {
       return `${r}.0`;
     }
     return String(r);
   }
 
+  /**
+   * Lägger till en recension till nuvarande produkt.
+   */
   postReview(): void {
-    console.log(this.reviewInput);
+    if (this.reviewInput.message && this.reviewInput.rating) {
+      const token: string | null = this.accountService.getToken();
+      if (token) {
+        this.reviewService.postReview(token, this.product().id, this.reviewInput.rating, this.reviewInput.message).subscribe({
+          next: () => {
+            this.loadProduct(); // Laddar om produkten och dess recensioner.
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        });
+      } else {
+        console.log("Token är otillgänlig.");
+      }
+    }
   }
 
-  deleteReview(): void {
-
+  /**
+   * Raderar en recension, skyddad av autentisering.
+   * @param id - vilket id recensionen har.
+   */
+  deleteReview(id: string): void {
+    const token: string | null = this.accountService.getToken();
+    if (token) {
+      this.reviewService.deleteReview(token, id).subscribe({
+        next: (response) => {
+          this.loadProduct();
+          this.reviewInput = {
+            rating: 3,
+            message: ""
+          }
+          console.log(response);
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      })
+    } else {
+      console.log("Token är otillgänlig.");
+    }
   }
 
+  /**
+   * Återställer fälten för att lägga till en recension.
+   */
+  cancelPost(): void {
+    this.reviewInput = {
+      rating: 3,
+      message: ""
+    }
+  }
+
+  /**
+   * Kollar om användaren äger recensionen. Används för att styra om ta bort knappen syns eller inte.
+   * Det spelar ingen roll om någon gör att ta bort knappen syns ändå, routern kräver autentisering och auktoriserar korrekt.
+   * @param id - recensionens id.
+   * @returns - en boolean om användaren äger recensionen eller inte.
+   */
+  userOwnThisReview(id: string): boolean {
+    return this.accountService.getUserInfo()?.id === id;
+  }
+
+  /**
+   * Kollar om användaren kan radera andras recensioner. Används för att styra om ta bort knappen syns eller inte.
+   * Det spelar ingen roll om någon gör att ta bort knappen syns ändå, routern kräver autentisering och auktoriserar korrekt.
+   * @returns - en boolean om användaren kan radera andras recensioner eller inte.
+   */
+  checkRole(): boolean {
+    const role = this.accountService.getUserInfo()?.role;
+    return role === "admin" || role === "root";
+  }
+
+  /**
+   * Kollar om användaren redan lagt till en recension. Används för att dölja lägga till recension.
+   */
+  postedAlready(): void {
+    this.reviewService.checkUserAlreadyPostedOnProduct(this.accountService.getToken()!, this.product().id).subscribe({
+      next: (response) => {
+      this.alreadyPostedOnProduct.set(response.success);
+    }, error: (error) => {
+      this.alreadyPostedOnProduct.set(error.error.success);
+      console.log(error);
+    }
+  });
+  }
 }

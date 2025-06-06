@@ -5,3 +5,7 @@ body {
     background-color: #12001A;
     color: #fff;
 }
+
+*:focus {
+    box-shadow: 0.063rem 0 1rem 0 gold;
+}
