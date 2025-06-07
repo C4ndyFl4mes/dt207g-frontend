@@ -1,1 +1,14 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+    <div class="dashboard-frame">
+        <ul class="items">
+            @for (item of items; track $index) {
+                <li class="item">
+                    <a [routerLink]="item.routeLink">
+                        <img class="icon" [src]="item.icon">
+                        <span>{{item.label}}</span>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
