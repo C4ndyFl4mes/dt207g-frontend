@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 body {
     margin: 0;
     // overflow-x: hidden;
     // font-family: "Roboto", Helvetica, Arial, sans-serif;
-    background-color: #12001A;
+    background-color: #12001a;
     color: #fff;
 }
 * {
@@ -12,4 +12,37 @@ body {
 }
 *:focus {
     box-shadow: 0.063rem 0 1rem 0 gold;
+}
+label {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.3rem;
+    width: fit-content;
+}
+input,
+select,
+textarea {
+    padding: 0 0.5rem 0 0.5rem;
+    background-color: #1b00205d;
+    border: 1px ridge gold;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #fff;
+    border-radius: 1rem;
+}
+select {
+    padding: 0;
+    text-align: center;
+}
+select:focus {
+    border-bottom-left-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+}
+
+.back {
+    border-radius: 1rem;
+    font-size: 1rem;
+}
+.timestamp {
+    font-size: 0.7rem;
 }

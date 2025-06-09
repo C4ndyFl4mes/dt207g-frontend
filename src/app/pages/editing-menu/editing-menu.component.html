@@ -1,1 +1,130 @@
-<p>editing-menu works!</p>
+<div class="menu-container">
+    <div class="menu-frame">
+        <button class="back" (click)="back()">
+            <i class="fa-solid fa-circle-left"></i>
+        </button>
+        <h2>Meny hantering</h2>
+        <div class="switch">
+            <button class="products-button" [class]="onProducts() ? 'active' : ''"
+                (click)="onProducts.set(true)">Hantera produkter</button>
+            <button class="categories-button" [class]="!onProducts() ? 'active' : ''"
+                (click)="onProducts.set(false)">Hantera kategorier</button>
+        </div>
+        @if (onProducts()) {
+        <div class="workspace">
+            <form>
+                <label>
+                    <span>Namn:</span>
+                    <input type="text" name="product-name" [(ngModel)]="product.name">
+                </label>
+                <label>
+                    <span>Kategori:</span>
+                    <select name="category-selection" [(ngModel)]="product.categoryID">
+                        @for (category of categories(); track $index) {
+                            <option [value]="category.id">{{category.name.normal}}</option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    <span>Pris:</span>
+                    <input type="text" name="product-price" [(ngModel)]="product.price">
+                </label>
+                <label>
+                    <span>Beskrivning:</span>
+                    <textarea name="product-description" [(ngModel)]="product.description"></textarea>
+                </label>
+                <div class="actions">
+                    <button type="button" (click)="createProduct()" [disabled]="id !== ''">Skapa</button>
+                    <button type="button" (click)="editProduct()">Ändra</button>
+                </div>
+            </form>
+
+            <div class="pagination-controls">
+                <button class="previous" (click)="previous()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <p>Sida {{pagination().currentPage}} av {{pagination().totalPages}}</p>
+                <button class="next" (click)="next()">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="list">
+                <div class="filter">
+                    <label>
+                        <span>Kategori:</span>
+                        <select [(ngModel)]="categoryFilter" (change)="filter()">
+                            @for (category of categories(); track $index) {
+                            <option [value]="category.name.slug">{{category.name.normal}}</option>
+                            }
+                        </select>
+                    </label>
+                </div>
+                @if (isLoading()) {
+                <div class="loading-products">
+                    Laddar produkter...
+                </div>
+                } @else {
+                @for (item of products(); track item.id) {
+                <article class="item" title="[Updaterad: {{item.updated}}; Skapad: {{item.created}}]">
+                    <div class="price">{{item.price}} SEK</div>
+                    <div class="image-holder">
+                        <img src="defaultimage.jpg" width="100" height="100">
+                    </div>
+                    <div class="header-desc">
+                        <h3>{{item.name.normal}}</h3>
+                        <p class="description">{{item.description}}</p>
+                    </div>
+                    <div class="actions">
+                        <button (click)="markProduct(item.id, item)">Ändra</button>
+                        <button (click)="deleteProduct(item.id)">Ta bort</button>
+                    </div>
+                </article>
+                }
+                }
+
+
+
+            </div>
+        </div>
+        } @else {
+        <div class="workspace">
+            <form>
+                <label>
+                    <span>Namn:</span>
+                    <input type="text" name="category-name" [(ngModel)]="category.name">
+                </label>
+                <div class="actions">
+                    <button type="button" (click)="createCategory()" [disabled]="categoryID !== ''">Skapa</button>
+                    <button type="button" (click)="editCategory()">Ändra</button>
+                </div>
+            </form>
+            <div class="pagination-controls">
+                <button class="previous" (click)="previous()">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <p>Sida {{categoryPagination().currentPage}} av {{categoryPagination().totalPages}}</p>
+                <button class="next" (click)="next()">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+            <div class="list board">
+                @if (isLoading()) {
+                <div class="loading-products">
+                    Laddar produkter...
+                </div>
+                } @else {
+                @for (item of categoriesPag(); track $index) {
+                <article class="item" title="[Updaterad: {{item.updated}}; Skapad: {{item.created}}]">
+                    <h3>{{item.name.normal}}</h3>
+                    <div class="actions">
+                        <button (click)="markCategory(item.id)">Ändra</button>
+                        <button (click)="deleteCategory(item.id)">Ta bort</button>
+                    </div>
+                </article>
+                }
+                }
+            </div>
+        </div>
+        }
+    </div>
+</div>

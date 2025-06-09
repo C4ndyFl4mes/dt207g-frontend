@@ -49,7 +49,9 @@ export class CafeMenuDetailsComponent implements OnInit {
         normal: "",
         slug: ""
       }
-    }
+    },
+    created: "",
+    updated: ""
   });
 
   // Startvärde för recensionsektionen.

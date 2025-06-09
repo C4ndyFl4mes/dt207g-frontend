@@ -14,4 +14,6 @@ export interface Product {
     description: string;
     price: number;
     rating: number;
+    created: string;
+    updated: string;
 }
