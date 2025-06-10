@@ -1,61 +1,57 @@
-<div class="account-container">
-    <div class="account-frame">
-        <div class="switch">
-            <button class="signin-button" [class]="!onRegistration() ? 'active' : ''"
-                (click)="onRegistration.set(false)">Inloggning</button>
-            <button class="signup-button" [class]="onRegistration() ? 'active' : ''"
-                (click)="onRegistration.set(true)">Registrering</button>
-        </div>
-        @if (onRegistration()) {
-        <form class="account">
-            <label>
-                <span>Förnamn:</span>
-                <input type="text" name="firstname" autocomplete="given-name" [(ngModel)]="user.firstname">
-            </label>
-            <label>
-                <span>Efternamn:</span>
-                <input type="text" name="lastname" autocomplete="family-name" [(ngModel)]="user.lastname">
-            </label>
-            <label>
-                <span>E-post:</span>
-                <input type="email" name="email" autocomplete="email" [(ngModel)]="user.email">
-            </label>
-            <label>
-                <span>Lösenord:</span>
-                <input type="password" autocomplete="current-password" name="password" [(ngModel)]="user.password">
-            </label>
-            <div>
-                <button type="button" class="form-button" (click)="registrate()">Registrera</button>
-            </div>
-        </form>
-        } @else {
-        <form class="account">
-            <label>
-                <span>E-post:</span>
-                <input type="email" name="email" autocomplete="email" [(ngModel)]="user.email">
-            </label>
-            <label>
-                <span>Lösenord:</span>
-                <input type="password" autocomplete="current-password" name="password" [(ngModel)]="user.password">
-            </label>
-            <div>
-                <button type="button" class="form-button" (click)="login()">Logga in</button>
-            </div>
-        </form>
-        }
-        @if (success().success) {
-            <div class="success">
-                {{success().message}} <strong>{{success().data}}</strong>
-            </div>
-        } @else {
-        @if (errors().length > 0) {
-        <ul>
-            @for (item of errors(); track item.id) {
-            <li>{{item.message}}</li>
-            }
-        </ul>
-        }
-        }
-
-    </div>
+<div class="switch">
+    <button class="left-button" [class]="!onRegistration() ? 'active' : ''"
+        (click)="onRegistration.set(false)">Inloggning</button>
+    <button class="right-button" [class]="onRegistration() ? 'active' : ''"
+        (click)="onRegistration.set(true)">Registrering</button>
 </div>
+@if (onRegistration()) {
+<form class="account">
+    <label>
+        <span>Förnamn:</span>
+        <input type="text" name="firstname" autocomplete="given-name" [(ngModel)]="user.firstname">
+    </label>
+    <label>
+        <span>Efternamn:</span>
+        <input type="text" name="lastname" autocomplete="family-name" [(ngModel)]="user.lastname">
+    </label>
+    <label>
+        <span>E-post:</span>
+        <input type="email" name="email" autocomplete="email" [(ngModel)]="user.email">
+    </label>
+    <label>
+        <span>Lösenord:</span>
+        <input type="password" autocomplete="current-password" name="password" [(ngModel)]="user.password">
+    </label>
+    <div>
+        <button type="button" class="form-button" (click)="registrate()">Registrera</button>
+    </div>
+</form>
+} @else {
+<form class="account">
+    <label>
+        <span>E-post:</span>
+        <input type="email" name="email" autocomplete="email" [(ngModel)]="user.email">
+    </label>
+    <label>
+        <span>Lösenord:</span>
+        <input type="password" autocomplete="current-password" name="password" [(ngModel)]="user.password">
+    </label>
+    <div>
+        <button type="button" class="form-button" (click)="login()">Logga in</button>
+    </div>
+</form>
+}
+<!-- Ska göras om till en partial för att återanvändas på flera ställen. -->
+@if (success().success) {
+<div class="success">
+    {{success().message}} <strong>{{success().data}}</strong>
+</div>
+} @else {
+@if (errors().length > 0) {
+<ul>
+    @for (item of errors(); track item.id) {
+    <li>{{item.message}}</li>
+    }
+</ul>
+}
+}

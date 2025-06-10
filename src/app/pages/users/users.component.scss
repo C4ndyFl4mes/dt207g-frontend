@@ -1,12 +1,5 @@
 form {
-    max-width: 500px;
-    margin: 0 auto;
-    margin-top: 2rem;
-
-    display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    gap: 2rem;
 
     .hidden {
         display: none;
@@ -32,57 +25,47 @@ form {
     }
 }
 
-.list {
+.item {
     position: relative;
-    margin-top: 1rem;
-    // background-color: #1b00205b;
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.5rem;
-    .item {
-        position: relative;
-        padding-top: 2rem;
-        padding-left: 1rem;
-        display: grid;
-        grid-template-columns: 100px auto;
-        gap: 0.5rem;
+    padding-top: 1rem;
 
-        background-color: #1b002000;
-        border: 1px ridge gold;
-        border-radius: 1rem;
+    display: grid;
+    grid-template-columns: 100px auto;
+    gap: 0.5rem;
 
-        transition: background-color 0.2s ease-in-out;
-        &:hover {
-            background-color: #1b00204b;
-        }
+    background-color: #1b002000;
+    border: 1px ridge gold;
+    border-radius: 1rem;
+
+    transition: background-color 0.2s ease-in-out;
+    &:hover {
+        background-color: #1b00204b;
     }
-}
-.list::-webkit-scrollbar {
-    display: none;
 }
 
 .image-holder {
     grid-area: 1/1/2/2;
     width: 75%;
-    max-width: 200px;
-    aspect-ratio: 1/1;
-    margin: 0 auto;
-    overflow: hidden;
+
     border-radius: 50%;
     border: 1px ridge #e6e6e67a;
     transition: 0.25s ease-in-out;
     display: flex;
     justify-content: center;
-    align-items:end;
+    align-items: end;
     svg {
         width: 75%;
         height: auto;
-        
+
         path {
             fill: #e6e6e67a;
             transition: 0.25s ease-in-out;
         }
     }
+}
+
+small {
+    grid-area: 2/1/3/2;
 }
 
 .item:hover > .image-holder {
@@ -92,3 +75,26 @@ form {
     }
 }
 
+@media screen and (max-width: 600px) {
+    .item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .image-holder {
+            margin: 0;
+            margin-top: 1rem;
+        }
+
+        .actions {
+            flex-wrap: wrap;
+            button:first-child {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 1rem;
+            }
+            button {
+                flex: 1;
+            }
+        }
+    }
+}

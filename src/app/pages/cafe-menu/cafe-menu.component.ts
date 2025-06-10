@@ -7,15 +7,17 @@ import { Pagination } from '../../models/pagination';
 import { Product } from '../../models/product';
 import { switchMap, tap } from 'rxjs/operators';
 import { Response } from '../../models/response';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cafe-menu',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, FormsModule],
   templateUrl: './cafe-menu.component.html',
   styleUrl: './cafe-menu.component.scss'
 })
 export class CafeMenuComponent implements OnInit {
 
+  activeCategorySelection = "";
   activeCategorySlug = signal<string | null>(""); // Den nuvarande kategorin.
   categories = signal<Array<Category>>([]); // Array av kategorier.
   products = signal<Array<Product>>([]); // Array av produkter.
@@ -45,6 +47,7 @@ export class CafeMenuComponent implements OnInit {
       this.activeCategorySlug.set(category);
       this.pagination.update(p => ({ ...p, currentPage: 1 }));
       this.loadProducts();
+      this.navigate();
     });
 
   }
@@ -76,11 +79,10 @@ export class CafeMenuComponent implements OnInit {
   }
 
   /**
-   * Ändrar url till /meny/kategori.
-   * @param category - vilken kategori som valdes i kategorilistan.
+   * Navigerar mellan kategorier.
    */
-  navigateToCategory(category: Category): void {
-    this.router.navigate(['/meny', category.name.slug]);
+  navigate(): void {
+    this.router.navigate(['/meny', this.activeCategorySelection]);
   }
 
   /**

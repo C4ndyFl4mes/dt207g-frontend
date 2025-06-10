@@ -1,104 +1,110 @@
-<div class="product-container">
-    <div class="product-frame">
-        <p class="breadcrumbs">
+<!-- <p class="breadcrumbs">
             <span>Meny</span> >
             <span>{{product().inCategory.name.normal}}</span> >
             <span>{{product().name.normal}}</span>
-        </p>
-        <div class="product">
-            <div class="image-holder">
-                <img src="defaultimage_large.jpg" width="350" height="350">
-            </div>
-            <article class="header-desc">
-                <h2>{{product().name.normal}}</h2>
-                <p class="description">{{product().description}}</p>
-            </article>
-        </div>
-        <div class="reviews-section">
-            <h3>Recensioner</h3>
-            <div class="rating">{{setAVGRating(product().rating)}} ★</div>
-            @if (loggedIn() && alreadyPostedOnProduct()) {
-            <div class="post-review">
-                <h4>Skriv en recension</h4>
-                <label class="rating-label">
-                    <span>Betyg:</span>
-                    <input type="number" name="rating" min="1" max="5" [(ngModel)]="reviewInput.rating">
-                </label>
-                <div class="message-section">
-                    <label class="message-label">
-                        <span>Meddelande:</span>
-                        <textarea name="message" [(ngModel)]="reviewInput.message" (focus)="posting.set(true)"
-                            (blur)="posting.set(false)"></textarea>
-                    </label>
-                    <div class="buttons" [class]="posting() ? 'posting' : ''">
-                        <button class="add" (click)="postReview()" (focus)="posting.set(true)"
-                            (blur)="posting.set(false)" (click)="posting.set(false)">Lägg till</button>
-                        <button class="cancel" (click)="cancelPost()" (focus)="posting.set(true)"
-                            (blur)="posting.set(false)" (click)="posting.set(false)">Avbryt</button>
-                    </div>
-                </div>
-            </div>
-            } @else {
-            @if (!alreadyPostedOnProduct()) {
-            <div class="post-review">
-
-            </div>
-            } @else {
-            <div class="post-review">
-                Logga in för att skriva recensioner!
-            </div>
-            }
-            }
-            @if (reviews_section().pagination.totalPages > 0) {
-            <div class="pagination-controls">
-                <button class="previous" (click)="previous()">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-                <p>Sida {{this.reviews_section().pagination.currentPage}} av
-                    {{this.reviews_section().pagination.totalPages}}</p>
-                <button class="next" (click)="next()">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
-            } @else {
-            @if (!isLoading()) {
-            <div class="loading-reviews">
-                Lägg till den första recensionen!
-            </div>
-            }
-            }
-            <div class="reviews">
-                @if (isLoading()) {
-                <div class="loading-reviews">
-                    Laddar recensioner...
-                </div>
-                } @else {
-                @if (loadingError()) {
-                <div class="loading-reviews">
-                    {{loadingError()}}
-                </div>
-                } @else {
-                @for (item of reviews_section().reviews; track item.id) {
-                <article>
-                    @if (item.rating === 1) {
-                    <h4>{{item.fullname}} gav <span>{{item.rating}}</span> stjärna</h4>
-                    } @else {
-                    <h4>{{item.fullname}} gav <span>{{item.rating}}</span> stjärnor</h4>
-                    }
-                    <p>{{item.message}}</p>
-                    <div>
-                        <span class="timestamp">{{item.posted}}</span>
-                        @if (userOwnThisReview(item.createdBy) || checkRole()) {
-                        <button class="delete-review" (click)="deleteReview(item.id)">Ta bort</button>
-                        }
-
-                    </div>
-                </article>
-                }
-                }
-                }
+        </p> -->
+<div class="product">
+    <div class="image-holder">
+        <img src="defaultimage_large.jpg" width="350" height="350">
+    </div>
+    <article class="header-desc">
+        <h2>{{product().name.normal}}</h2>
+        <p class="description">{{product().description}}</p>
+    </article>
+</div>
+<div class="reviews-section">
+    <h3>Recensioner</h3>
+    <div class="rating">{{setAVGRating(product().rating)}} ★</div>
+    @if (loggedIn() && alreadyPostedOnProduct()) {
+    <div class="post-review">
+        <h4>Skriv en recension</h4>
+        <label class="rating-label">
+            <span>Betyg:</span>
+            <select name="rating" [(ngModel)]="reviewInput.rating">
+                <option value="1">1 ★</option>
+                <option value="2">2 ★</option>
+                <option value="3">3 ★</option>
+                <option value="4">4 ★</option>
+                <option value="5">5 ★</option>
+            </select>
+        </label>
+        <div class="message-section">
+            <label class="message-label">
+                <span>Meddelande:</span>
+                <textarea name="message" [(ngModel)]="reviewInput.message" (focus)="posting.set(true)"
+                    (blur)="posting.set(false)"></textarea>
+            </label>
+            <div class="buttons" [class]="posting() ? 'posting' : ''">
+                <button class="add" (click)="postReview()" (focus)="posting.set(true)" (blur)="posting.set(false)"
+                    (click)="posting.set(false)">Lägg till</button>
+                <button class="cancel" (click)="cancelPost()" (focus)="posting.set(true)" (blur)="posting.set(false)"
+                    (click)="posting.set(false)">Avbryt</button>
             </div>
         </div>
     </div>
+    } @else {
+    @if (!alreadyPostedOnProduct()) {
+    <div class="post-review">
 
+    </div>
+    } @else {
+    <div class="post-review">
+        Logga in för att skriva recensioner!
+    </div>
+    }
+    }
+    @if (reviews_section().pagination.totalPages > 0) {
+    <div class="pagination-controls">
+        <button class="previous" (click)="previous()">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <p>Sida {{this.reviews_section().pagination.currentPage}} av
+            {{this.reviews_section().pagination.totalPages}}</p>
+        <button class="next" (click)="next()">
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+    } @else {
+    @if (!isLoading()) {
+    <div class="loading-reviews">
+        Lägg till den första recensionen!
+    </div>
+    }
+    }
+    <div class="normal-list">
+        @if (isLoading()) {
+        <div class="loading">
+            Laddar recensioner...
+        </div>
+        } @else {
+        @if (loadingError()) {
+        <div class="loading">
+            {{loadingError()}}
+        </div>
+        } @else {
+        @for (item of reviews_section().reviews; track item.id) {
+        <article class="item review">
+            <div class="image-holder">
+                <img src="user.svg" width="100" height="100">
+            </div>
+            <div class="header-desc">
+                @if (item.rating === 1) {
+                <h4>{{item.fullname}} gav <span>{{item.rating}}</span> stjärna</h4>
+                } @else {
+                <h4>{{item.fullname}} gav <span>{{item.rating}}</span> stjärnor</h4>
+                }
+                <p>{{item.message}}</p>
+            </div>
+            <div class="actions">
+                <small>{{item.posted}}</small>
+                @if (userOwnThisReview(item.createdBy) || checkRole()) {
+                <button class="delete-review" (click)="deleteReview(item.id)">Ta bort</button>
+                }
+
+            </div>
+        </article>
+        }
+        }
+        }
+    </div>
 </div>
