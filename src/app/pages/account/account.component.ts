@@ -61,7 +61,7 @@ export class AccountComponent {
     if (user.password.length < 8) this.errors().push({ id: 5, message: "Lösenordet är för kort. Minst åtta tecken långt." });
 
     if (this.errors().length === 0) {
-      this.accountSerivce.register(this.user).subscribe({
+      this.accountSerivce.register(this.user.firstname, this.user.lastname, this.user.email, this.user.password).subscribe({
         next: () => {
           this.login(); // Loggar in automatiskt efter lyckan registrering.
         },
@@ -76,7 +76,7 @@ export class AccountComponent {
    * Loggar in användaren och visar ett meddelande på skärmen att användaren är "...inloggad som namn"
    */
   login(): void {
-    this.accountSerivce.login(this.user).subscribe({
+    this.accountSerivce.login(this.user.email, this.user.password).subscribe({
       next: (response) => {
         this.accountSerivce.setUser(response.data.account, response.data.token);
         this.user = {

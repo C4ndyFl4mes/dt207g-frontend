@@ -12,9 +12,9 @@
     box-shadow: 0.063rem 0 1.25rem 0 #ce12a5;
 }
 
-h2 {
-    justify-self: center;
-}
+// h2 {
+//     justify-self: center;
+// }
 
 .switch {
     display: flex;
@@ -36,25 +36,25 @@ h2 {
     box-shadow: 0.063rem 0 1.25rem 0 gold;
 }
 
-button {
-    width: fit-content;
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    cursor: pointer;
-    white-space: nowrap;
-    background-color: rgba(255, 217, 0, 0.253);
-    border: none;
-    color: #fff;
-    height: 2rem;
-    transition: background-color 0.2s ease-in-out;
+// button {
+//     width: fit-content;
+//     padding: 0.5rem 2rem 0.5rem 2rem;
+//     cursor: pointer;
+//     white-space: nowrap;
+//     background-color: rgba(255, 217, 0, 0.253);
+//     border: none;
+//     color: #fff;
+//     height: 2rem;
+//     transition: background-color 0.2s ease-in-out;
 
-    &:hover {
-        background-color: rgba(255, 217, 0, 0.397);
-    }
+//     &:hover {
+//         background-color: rgba(255, 217, 0, 0.397);
+//     }
 
-    &:active {
-        background-color: rgba(255, 217, 0, 0.685);
-    }
-}
+//     &:active {
+//         background-color: rgba(255, 217, 0, 0.685);
+//     }
+// }
 
 .workspace {
     width: 100%;
@@ -140,68 +140,6 @@ form {
     background-color: rgba(255, 217, 0, 0.253);
     box-shadow: 0.063rem 0 1.25rem 0 gold;
 }
-
-.pagination-controls {
-    max-width: fit-content;
-    width: 90%;
-    margin: 0 auto;
-    margin-top: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-
-    white-space: nowrap;
-    height: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0.063rem 0 1.25rem 0 gold;
-
-    button {
-        flex: 1;
-        
-        border: none;
-        
-        height: 2rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        
-    }
-     p {
-        height: 2rem;
-        padding: 0 1rem 0 1rem;
-        display: flex;
-        align-items: center;
-        
-        background-color: rgba(255, 217, 0, 0.253);
-        border-left: none;
-        border-right: none;
-    }
-
-    .previous {
-        border-top-left-radius: 1rem;
-        border-bottom-left-radius: 1rem;
-    }
-
-    .next {
-        border-top-right-radius: 1rem;
-        border-bottom-right-radius: 1rem;
-    }
-}
-
-.filter {
-    margin-top: 1rem;
-    margin-left: 1rem;
-    label {
-        display: flex;
-        flex-direction: column;
-        width: fit-content;
-    }
-    select {
-        width: 10rem;
-        max-width: 95%;
-    }
-}
-
 
 .actions {
     width: 100%;

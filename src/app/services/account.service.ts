@@ -24,8 +24,8 @@ export class AccountService {
    * @param user - användarinformation.
    * @returns - success, message, data: null.
    */
-  register(user: User): Observable<Response<null>> {
-    return this.http.post<Response<null>>(`${this.authURL}/register`, user);
+  register(firstname: string, lastname: string, email: string, password: string): Observable<Response<null>> {
+    return this.http.post<Response<null>>(`${this.authURL}/register`, {firstname, lastname, email, password});
   }
 
   /**
@@ -33,8 +33,8 @@ export class AccountService {
    * @param user - användarinformation.
    * @returns - success, message, data: {token och account}.
    */
-  login(user: User): Observable<Response<{token: string; account: User}>> {
-    return this.http.post<Response<{token: string; account: User}>>(`${this.authURL}/login`, { email: user.email, password: user.password });
+  login(email: string, password: string): Observable<Response<{token: string; account: User}>> {
+    return this.http.post<Response<{token: string; account: User}>>(`${this.authURL}/login`, { email, password });
   }
 
   /**

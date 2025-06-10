@@ -1,1 +1,89 @@
-<p>users works!</p>
+<div class="dashboard-container">
+    <div class="dashboard-frame">
+        <button class="back" (click)="back()">
+            <i class="fa-solid fa-circle-left"></i>
+        </button>
+        <h2>Hantera användare</h2>
+        <form>
+            <label>
+                <span>Förnamn:</span>
+                <input type="text" name="firstname" autocomplete="given-name" [(ngModel)]="user.firstname">
+            </label>
+            <label>
+                <span>Efternamn:</span>
+                <input type="text" name="lastname" autocomplete="family-name" [(ngModel)]="user.lastname">
+            </label>
+            <label [class]="!isRoot() ? 'hidden' : ''">
+                <span>E-post:</span>
+                <input type="email" name="email" autocomplete="email" [(ngModel)]="user.email">
+            </label>
+            <label [class]="!isRoot() ? 'hidden' : ''">
+                <span>Lösenord:</span>
+                <input type="password" autocomplete="current-password" name="password" [(ngModel)]="user.password">
+            </label>
+            <div class="actions">
+                <button type="button" (click)="createAdmin()" [class]="!isRoot() ? 'hidden' : ''" [disabled]="userID !== ''">Skapa Admin</button>
+                <button type="button" (click)="editUser()">Ändra</button>
+            </div>
+        </form>
+        <div class="pagination-controls">
+            <button class="previous" (click)="previous()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <p>Sida {{pagination().currentPage}} av {{pagination().totalPages}}</p>
+            <button class="next" (click)="next()">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="list">
+            <div class="filter">
+                <label>
+                    <span>Roler:</span>
+                    <select name="role-filter" [(ngModel)]="filter.role" (change)="setFilter()">
+                        <option value="" selected>Alla</option>
+                        <option value="user">Användare</option>
+                        <option value="admin">Admin</option>
+                        <option value="root">Root</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Namn:</span>
+                    <input type="text" name="name-filter" [(ngModel)]="filter.name" (input)="setFilter()">
+                </label>
+            </div>
+            @if (isLoading()) {
+                <div class="loading">
+                    Laddar användare...
+                </div>
+            } @else {
+            @for (item of users(); track $index) {
+            <article class="item">
+                <div class="image-holder">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="100" hight="100">
+                        <!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                        <path
+                            d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z" />
+                    </svg>
+                </div>
+                <h3>{{item.firstname}} {{item.lastname}}</h3>
+                <small title="Ändrad {{item.edited}}">
+                    {{item.role?.replace(item.role?.charAt(0)!, item.role?.charAt(0)?.toUpperCase()!)}}
+                    <br />
+                    {{item.registered}}
+                </small>
+
+                <div class="actions">
+                    <button (click)="markUser(item.id, item)"
+                        [disabled]="(item.role === 'admin' || item.role === 'root') && isAdmin() && item.id !== getID()"
+                        [title]="(item.role === 'admin' || item.role === 'root') && isAdmin() && item.id !== getID() ? 'Du har inte behörighet att ändra denna användare.' : ''">Ändra</button>
+                    <button (click)="deleteUser(item.id)"
+                        [disabled]="(item.role === 'admin' || item.role === 'root') && isAdmin() && item.id !== getID()"
+                        [title]="(item.role === 'admin' || item.role === 'root') && isAdmin() && item.id !== getID() ? 'Du har inte behörighet att ta bort denna användare.' : ''">Ta
+                        bort</button>
+                </div>
+            </article>
+            }
+            }
+        </div>
+    </div>
+</div>
