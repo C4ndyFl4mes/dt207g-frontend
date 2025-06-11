@@ -1,0 +1,23 @@
+// Ska bytas namn till errors senare och användas i en partial.
+ul {
+    list-style: none;
+    margin: 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    line-height: 1.8rem;
+    border-radius: 1rem;
+    background-color: rgba(255, 0, 0, 0.301);
+    box-shadow: 0.063rem 0 1.25rem 0 red;
+}
+
+.success {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    line-height: 1.8rem;
+    border-radius: 1rem;
+    background-color: rgba(1, 209, 1, 0.308);
+    box-shadow: 0.063rem 0 1.25rem 0 rgb(1, 209, 1);
+    text-align: center;
+}

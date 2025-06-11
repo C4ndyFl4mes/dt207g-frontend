@@ -2,10 +2,12 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { Response } from '../../models/response';
+import { FormMessageComponent } from "../../partials/form-message/form-message.component";
+import { Validation } from '../../validation';
 
 @Component({
   selector: 'app-account',
-  imports: [FormsModule],
+  imports: [FormsModule, FormMessageComponent],
   templateUrl: './account.component.html',
   styleUrl: './account.component.scss'
 })
@@ -21,7 +23,7 @@ export class AccountComponent {
     password: ""
   }
 
-  errors = signal<Array<{ id: number; message: string; }>>([]); // Lagrar felmeddelanden för inmatningsfälten.
+  errors = signal<Array<string>>([]); // Lagrar felmeddelanden för inmatningsfälten.
 
   // Startvärde för success meddelandet.
   success = signal<Response<string>>({
@@ -39,34 +41,48 @@ export class AccountComponent {
   registrate(): void {
     const user = this.user; // Slipper skriva this hela tiden.
 
+    this.success().success = false;
     this.errors.set([]); // Återställer felmeddelanden för att endast relevanta felmeddelanden ska visas.
 
-    if (user.firstname.length < 2 || user.firstname.length > 32) {
-      this.errors().push({ id: 8, message: "Förnamn måste vara mellan två och 32 tecken." });
-    }
+    // Valideringar för förnamn, mellan 2 och 32 tecken, får inte innehålla siffror eller specialtecken.
+    const firstnameRange = Validation.range<string>(user.firstname, "Förnamn", 2, 32);
+    if (firstnameRange) this.errors().push(firstnameRange);
+    const firstnameHasNumbers = Validation.unableToContainNumbers(user.firstname, "Förnamn");
+    if (firstnameHasNumbers) this.errors().push(firstnameHasNumbers);
+    const firstnameHasSpecial = Validation.unableToContainSpecialChar(user.firstname, "Förnamn");
+    if (firstnameHasSpecial) this.errors().push(firstnameHasSpecial);
 
-    if (user.lastname.length < 2 || user.lastname.length > 32) {
-      this.errors().push({ id: 7, message: "Efternamn måste vara mellan två och 32 tecken." });
-    }
+    // Samma valideringar som för förnamn.
+    const lastnameRange = Validation.range<string>(user.lastname, "Efternamn", 2, 32);
+    if (lastnameRange) this.errors().push(lastnameRange);
+    const lastnameHasNumbers = Validation.unableToContainNumbers(user.lastname, "Efternamn");
+    if (lastnameHasNumbers) this.errors().push(lastnameHasNumbers);
+    const lastnameHasSpecial = Validation.unableToContainSpecialChar(user.lastname, "Efternamn");
+    if (lastnameHasSpecial) this.errors().push(lastnameHasSpecial);
 
-    if (!user.email.includes("@") || !user.email.includes(".")) {
-      this.errors().push({ id: 6, message: "E-post addressen är felaktig." });
-    }
+    // Validerar att e-posten är korrekt formatterad, typ a@b.c
+    const email = Validation.email(user.email, "E-post");
+    if (email) this.errors().push(email);
 
-    // Lösenordsvalideringar:
-    if (!/[a-z]/.test(user.password)) this.errors().push({ id: 1, message: "Lösenordet måste innehålla en liten bokstav." });
-    if (!/[A-Z]/.test(user.password)) this.errors().push({ id: 2, message: "Lösenordet måste innehålla en stor bokstav." });
-    if (!/\d/.test(user.password)) this.errors().push({ id: 3, message: "Lösenordet måste innehålla en siffra." });
-    if (!/[!@#$%^&*]/.test(user.password)) this.errors().push({ id: 4, message: "Lösenordet måste innehålla ett special tecken (!@#$%^&*)." });
-    if (user.password.length < 8) this.errors().push({ id: 5, message: "Lösenordet är för kort. Minst åtta tecken långt." });
+    // Validerar att lösenordet är 8 tecken långt, har minst en av följande, gemen, versal, siffra och specialtecken.
+    const passwordLength = Validation.passwordLength(user.password);
+    if (passwordLength) this.errors().push(passwordLength);
+    const passwordSmallChar = Validation.passwordSmallChar(user.password);
+    if (passwordSmallChar) this.errors().push(passwordSmallChar);
+    const passwordCapitalChar = Validation.passwordCapitalChar(user.password);
+    if (passwordCapitalChar) this.errors().push(passwordCapitalChar);
+    const passwordNumber = Validation.passwordNumber(user.password);
+    if (passwordNumber) this.errors().push(passwordNumber);
+    const passwordSpecialChar = Validation.passwordSpecialChar(user.password);
+    if (passwordSpecialChar) this.errors().push(passwordSpecialChar);
 
     if (this.errors().length === 0) {
       this.accountSerivce.register(this.user.firstname, this.user.lastname, this.user.email, this.user.password).subscribe({
         next: () => {
-          this.login(); // Loggar in automatiskt efter lyckan registrering.
+          this.login(); // Loggar in automatiskt efter lyckad registrering.
         },
         error: (error) => {
-          this.errors().push({ id: 9, message: error.error.message });
+          this.errors().push(error.error.message);
         }
       });
     }
@@ -76,6 +92,8 @@ export class AccountComponent {
    * Loggar in användaren och visar ett meddelande på skärmen att användaren är "...inloggad som namn"
    */
   login(): void {
+    this.success().success = false;
+    this.errors.set([]);
     this.accountSerivce.login(this.user.email, this.user.password).subscribe({
       next: (response) => {
         this.accountSerivce.setUser(response.data.account, response.data.token);
@@ -93,9 +111,8 @@ export class AccountComponent {
         });
       },
       error: (error) => {
-        console.log(error);
+        this.errors().push(error.error.message);
       }
-    })
+    });
   }
-
 }

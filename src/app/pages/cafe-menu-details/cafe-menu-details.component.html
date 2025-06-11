@@ -41,7 +41,9 @@
                     (click)="posting.set(false)">Avbryt</button>
             </div>
         </div>
+        
     </div>
+    
     } @else {
     @if (!alreadyPostedOnProduct()) {
     <div class="post-review">
@@ -53,6 +55,7 @@
     </div>
     }
     }
+    <app-form-message [success]="success()" [errors]="errors()"></app-form-message>
     @if (reviews_section().pagination.totalPages > 0) {
     <div class="pagination-controls">
         <button class="previous" (click)="previous()">

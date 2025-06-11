@@ -5,11 +5,14 @@ import { CafeService } from '../../services/cafe.service';
 import { Category } from '../../models/category';
 import { Pagination } from '../../models/pagination';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormMessageComponent } from "../../partials/form-message/form-message.component";
+import { Response } from '../../models/response';
+import { Validation } from '../../validation';
 
 
 @Component({
   selector: 'app-editing-menu',
-  imports: [FormsModule],
+  imports: [FormsModule, FormMessageComponent],
   templateUrl: './editing-menu.component.html',
   styleUrl: './editing-menu.component.scss'
 })
@@ -51,6 +54,15 @@ export class EditingMenuComponent implements OnInit {
     name: "",
   }
 
+  errors = signal<Array<string>>([]); // Lagrar felmeddelanden för inmatningsfälten.
+
+  // Startvärde för success meddelandet.
+  success = signal<Response<string>>({
+    success: false,
+    data: "",
+    message: ""
+  });
+
   constructor(private route: Router, private activeRoute: ActivatedRoute, private cafeService: CafeService) { }
 
   ngOnInit(): void {
@@ -61,6 +73,9 @@ export class EditingMenuComponent implements OnInit {
     });
   }
 
+  /**
+   * Hämtar kategorier.
+   */
   loadCategories(): void {
     this.isLoading.set(true);
     this.cafeService.getCategoriesPag(this.categoryPagination().currentPage, this.categoryPagination().pageSize).subscribe({
@@ -74,6 +89,7 @@ export class EditingMenuComponent implements OnInit {
       }
     });
   }
+
   /**
    * Hämtar produkter.
    */
@@ -94,12 +110,16 @@ export class EditingMenuComponent implements OnInit {
         this.pagination.set(response.data.pagination);
         this.isLoading.set(false);
       },
-      error: () => {
+      error: (error) => {
+        this.errors().push(error.error.message);
         this.isLoading.set(false);
       }
     });
   }
 
+  /**
+   * Laddar om produkter när filter ändras.
+   */
   filter(): void {
     this.loadProducts();
   }
@@ -141,6 +161,11 @@ export class EditingMenuComponent implements OnInit {
     }
   }
 
+  /**
+   * Markerar en produkt för ändring.
+   * @param itemdID - vilken produkt.
+   * @param item - produkten.
+   */
   markProduct(itemdID: string, item: Product): void {
     this.id = itemdID;
     this.product = {
@@ -151,77 +176,211 @@ export class EditingMenuComponent implements OnInit {
     }
   }
 
+  /**
+   * Skapar en produkt.
+   */
   createProduct(): void {
     const product = this.product;
-    this.cafeService.createProduct(product.name, Number(product.price), product.description, product.categoryID).subscribe((response) => {
-      console.log(response);
-      this.loadProducts();
-      this.id = "";
-      this.product = {
-        name: "",
-        price: "",
-        description: "",
-        categoryID: ""
-      };
-    });
+    this.success().success = false;
+    this.errors.set([]);
+
+    const nameRange = Validation.range<string>(product.name, "Produktnamn", 2, 100);
+    if (nameRange) this.errors().push(nameRange);
+    const nameHasNumbers = Validation.unableToContainNumbers(product.name, "Produktnamn");
+    if (nameHasNumbers) this.errors().push(nameHasNumbers);
+
+    const priceFormat = Validation.correctPriceFormat(product.price);
+    if (priceFormat) this.errors().push(priceFormat);
+
+    const descriptionRange = Validation.range(product.description, "Produktbeskrivning", 1, 300);
+    if (descriptionRange) this.errors().push(descriptionRange);
+    const description = Validation.filterPossibleInjection(product.description, "Produktbeskrivning");
+    if (description) this.errors().push(description);
+
+    if (this.errors().length === 0) {
+      this.cafeService.createProduct(product.name, Number(product.price), product.description, product.categoryID).subscribe({
+        next: (response) => {
+          this.success.set({
+            success: response.success,
+            data: "",
+            message: "Produkten skapades."
+          });
+          this.loadProducts();
+          this.id = "";
+          this.product = {
+            name: "",
+            price: "",
+            description: "",
+            categoryID: ""
+          };
+        },
+        error: (error) => {
+          this.errors().push(error.error.message);
+        }
+      });
+    }
   }
 
+  /**
+   * Ändrar en produkt.
+   */
   editProduct(): void {
     const product = this.product;
-    this.cafeService.editProduct(this.id, product.name, Number(product.price), product.description, product.categoryID).subscribe((response) => {
-      console.log(response);
-      this.loadProducts();
-      this.id = "";
-      this.product = {
-        name: "",
-        price: "",
-        description: "",
-        categoryID: ""
-      };
-    });
+    this.success().success = false;
+    this.errors.set([]);
+
+    const nameRange = Validation.range<string>(product.name, "Produktnamn", 2, 100);
+    if (nameRange) this.errors().push(nameRange);
+    const nameHasNumbers = Validation.unableToContainNumbers(product.name, "Produktnamn");
+    if (nameHasNumbers) this.errors().push(nameHasNumbers);
+
+    const priceFormat = Validation.correctPriceFormat(product.price);
+    if (priceFormat) this.errors().push(priceFormat);
+
+    const descriptionRange = Validation.range(product.description, "Produktbeskrivning", 1, 300);
+    if (descriptionRange) this.errors().push(descriptionRange);
+    const description = Validation.filterPossibleInjection(product.description, "Produktbeskrivning");
+    if (description) this.errors().push(description);
+
+    if (this.errors().length === 0) {
+      this.cafeService.editProduct(this.id, product.name, Number(product.price), product.description, product.categoryID).subscribe({
+        next: (response) => {
+          this.success.set({
+            success: response.success,
+            data: "",
+            message: "Produkten ändrades."
+          });
+          this.loadProducts();
+          this.id = "";
+          this.product = {
+            name: "",
+            price: "",
+            description: "",
+            categoryID: ""
+          };
+        },
+        error: (error) => {
+          this.errors().push(error.error.message);
+        }
+      });
+    }
   }
 
+  /**
+   * Raderar en produkt.
+   * @param id - vilken produkt som ska raderas.
+   */
   deleteProduct(id: string): void {
-    this.cafeService.deleteProduct(id).subscribe((response) => {
-      console.log(response);
-      this.loadProducts();
+    this.success().success = false;
+    this.errors.set([]);
+    this.cafeService.deleteProduct(id).subscribe({
+      next: (response) => {
+        this.success.set({
+          success: response.success,
+          data: "",
+          message: "Produkten raderades."
+        });
+        this.loadProducts();
+      }, error: (error) => {
+        this.errors().push(error.error.message);
+      }
     });
   }
 
+  /**
+   * Markerar en kategori för ändring.
+   * @param id - vilken kategori.
+   */
   markCategory(id: string): void {
     this.category.name = this.categoriesPag().filter(category => category.id === id)[0].name.normal;
     this.categoryID = id;
   }
 
+  /**
+   * Skapar en kategori.
+   */
   createCategory(): void {
-    this.cafeService.createCategory(this.category.name).subscribe((response) => {
-      console.log(response);
-      this.loadCategories();
-      this.categoryID = "";
-      this.category.name = "";
-    });
+    this.success().success = false;
+    this.errors.set([]);
+
+    const nameRange = Validation.range<string>(this.category.name, "Kategorinamn", 2, 50);
+    if (nameRange) this.errors().push(nameRange);
+    const nameHasNumbers = Validation.unableToContainNumbers(this.category.name, "Kategorinamn");
+    if (nameHasNumbers) this.errors().push(nameHasNumbers);
+
+    if (this.errors().length === 0) {
+      this.cafeService.createCategory(this.category.name).subscribe({
+        next: (response) => {
+          this.success.set({
+            success: response.success,
+            data: "",
+            message: "Kategorin skapades."
+          });
+          this.loadCategories();
+          this.categoryID = "";
+          this.category.name = "";
+        }, error: (error) => {
+          this.errors().push(error.error.message);
+        }
+      });
+    }
   }
 
+  /**
+   * Ändrar en kategori.
+   */
   editCategory(): void {
-    this.cafeService.editCategory(this.categoryID, this.category.name).subscribe((response) => {
-      console.log(response);
-      this.loadCategories();
-      this.categoryID = "";
-      this.category.name = "";
-    });
+    this.success().success = false;
+    this.errors.set([]);
+
+    const nameRange = Validation.range<string>(this.category.name, "Kategorinamn", 2, 50);
+    if (nameRange) this.errors().push(nameRange);
+    const nameHasNumbers = Validation.unableToContainNumbers(this.category.name, "Kategorinamn");
+    if (nameHasNumbers) this.errors().push(nameHasNumbers);
+
+    if (this.errors().length === 0) {
+      this.cafeService.editCategory(this.categoryID, this.category.name).subscribe({
+        next: (response) => {
+          this.success.set({
+            success: response.success,
+            data: "",
+            message: "Kategorin ändrades."
+          });
+          this.loadCategories();
+          this.categoryID = "";
+          this.category.name = "";
+        }, error: (error) => {
+          this.errors().push(error.error.message);
+        }
+      });
+    }
   }
 
+  /**
+   * Raderar en kategori.
+   * @param id - vilken kategori som ska raderas.
+   */
   deleteCategory(id: string): void {
-    this.cafeService.deleteCategory(id).subscribe((response) => {
-      console.log(response);
-      this.loadCategories();
+    this.success().success = false;
+    this.errors.set([]);
+    this.cafeService.deleteCategory(id).subscribe({
+      next: (response) => {
+        this.success.set({
+          success: response.success,
+          data: "",
+          message: "Kategorin raderades."
+        });
+        this.loadCategories();
+      }, error: (error) => {
+        this.errors().push(error.error.message);
+      }
     });
   }
 
+  /**
+   * Förflyttar användaren till instrumentpanelen.
+   */
   back(): void {
     this.route.navigate([".."], { relativeTo: this.activeRoute });
   }
-
-
-
 }

@@ -7,10 +7,13 @@ import { Pagination } from '../../models/pagination';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { ReviewService } from '../../services/review.service';
+import { FormMessageComponent } from "../../partials/form-message/form-message.component";
+import { Response } from '../../models/response';
+import { Validation } from '../../validation';
 
 @Component({
   selector: 'app-cafe-menu-details',
-  imports: [FormsModule],
+  imports: [FormsModule, FormMessageComponent],
   templateUrl: './cafe-menu-details.component.html',
   styleUrl: './cafe-menu-details.component.scss'
 })
@@ -65,6 +68,15 @@ export class CafeMenuDetailsComponent implements OnInit {
     reviews: []
   });
 
+  errors = signal<Array<string>>([]); // Lagrar felmeddelanden för inmatningsfälten.
+
+  // Startvärde för success meddelandet.
+  success = signal<Response<string>>({
+    success: false,
+    data: "",
+    message: ""
+  });
+
   /**
    * 
    * @param router - 
@@ -94,9 +106,9 @@ export class CafeMenuDetailsComponent implements OnInit {
     });
   }
 
-   /**
-   * Sätter inloggningsstatus för användaren. Används för att dölja lägga till recension.
-   */
+  /**
+  * Sätter inloggningsstatus för användaren. Används för att dölja lägga till recension.
+  */
   isLoggedIn(): void {
     this.accountService.isLoggedIn.subscribe((loggedIn) => {
       this.loggedIn.set(loggedIn);
@@ -165,15 +177,32 @@ export class CafeMenuDetailsComponent implements OnInit {
    * Lägger till en recension till nuvarande produkt.
    */
   postReview(): void {
-    if (this.reviewInput.message && this.reviewInput.rating) {
+    this.success().success = false;
+    this.errors.set([]);
+
+    const ratingRange = Validation.range<number>(this.reviewInput.rating, "Betyg", 1, 5);
+    if (ratingRange) this.errors().push(ratingRange);
+
+    const reviewRange = Validation.range<string>(this.reviewInput.message, "Recension", 1, 300);
+    if (reviewRange) this.errors().push(reviewRange);
+
+    const reviewInjection = Validation.filterPossibleInjection(this.reviewInput.message, "Recension");
+    if (reviewInjection) this.errors().push(reviewInjection);
+
+    if (this.errors().length === 0) {
       const token: string | null = this.accountService.getToken();
       if (token) {
         this.reviewService.postReview(token, this.product().id, this.reviewInput.rating, this.reviewInput.message).subscribe({
-          next: () => {
+          next: (response) => {
+            this.success.set({
+              success: response.success,
+              data: "",
+              message: "Recension tillagd."
+            });
             this.loadProduct(); // Laddar om produkten och dess recensioner.
           },
           error: (error) => {
-            console.log(error);
+            this.errors().push(error.error.message);
           }
         });
       } else {
@@ -187,6 +216,8 @@ export class CafeMenuDetailsComponent implements OnInit {
    * @param id - vilket id recensionen har.
    */
   deleteReview(id: string): void {
+    this.success().success = false;
+    this.errors.set([]);
     const token: string | null = this.accountService.getToken();
     if (token) {
       this.reviewService.deleteReview(token, id).subscribe({
@@ -196,10 +227,14 @@ export class CafeMenuDetailsComponent implements OnInit {
             rating: 3,
             message: ""
           }
-          console.log(response);
+          this.success.set({
+            success: response.success,
+            data: "",
+            message: "Recension raderad."
+          });
         },
         error: (error) => {
-          console.log(error);
+          this.errors().push(error.error.message);
         }
       })
     } else {
@@ -243,11 +278,11 @@ export class CafeMenuDetailsComponent implements OnInit {
   postedAlready(): void {
     this.reviewService.checkUserAlreadyPostedOnProduct(this.accountService.getToken()!, this.product().id).subscribe({
       next: (response) => {
-      this.alreadyPostedOnProduct.set(response.success);
-    }, error: (error) => {
-      this.alreadyPostedOnProduct.set(error.error.success);
-      console.log(error);
-    }
-  });
+        this.alreadyPostedOnProduct.set(response.success);
+      }, error: (error) => {
+        this.alreadyPostedOnProduct.set(error.error.success);
+        console.log(error);
+      }
+    });
   }
 }

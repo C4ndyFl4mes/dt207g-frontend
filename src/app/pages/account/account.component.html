@@ -41,17 +41,5 @@
     </div>
 </form>
 }
-<!-- Ska göras om till en partial för att återanvändas på flera ställen. -->
-@if (success().success) {
-<div class="success">
-    {{success().message}} <strong>{{success().data}}</strong>
-</div>
-} @else {
-@if (errors().length > 0) {
-<ul>
-    @for (item of errors(); track item.id) {
-    <li>{{item.message}}</li>
-    }
-</ul>
-}
-}
+<app-form-message [success]="success()" [errors]="errors()"></app-form-message>
+

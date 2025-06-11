@@ -7,7 +7,6 @@ import { AccountComponent } from './pages/account/account.component';
 import { AuthGuard } from './guards/auth.guard';
 import { UsersComponent } from './pages/users/users.component';
 import { EditingMenuComponent } from './pages/editing-menu/editing-menu.component';
-import { ServicesComponent } from './pages/services/services.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
@@ -20,6 +19,5 @@ export const routes: Routes = [
     { path: "instrumentpanelen/anvandare", component: UsersComponent },
     { path: "instrumentpanelen/anvandare/:userid", component: ProfileComponent },
     { path: "instrumentpanelen/meny", component: EditingMenuComponent, canActivate: [AuthGuard] },
-    { path: "instrumentpanelen/services", component: ServicesComponent, canActivate: [AuthGuard] },
     { path: "", pathMatch: "full", redirectTo: "hem" }
 ];

@@ -1,0 +1,13 @@
+@if (success().success) {
+<div class="success">
+    {{success().message}} <strong>{{success().data}}</strong>
+</div>
+} @else {
+@if (errors().length > 0) {
+<ul>
+    @for (item of errors(); track $index) {
+    <li>{{item}}</li>
+    }
+</ul>
+}
+}

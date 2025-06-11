@@ -25,6 +25,7 @@
         <button type="button" (click)="editUser()">Ändra</button>
     </div>
 </form>
+<app-form-message [success]="success()" [errors]="errors()"></app-form-message>
 <div class="pagination-controls">
     <button class="previous" (click)="previous()">
         <i class="fa-solid fa-arrow-left"></i>
@@ -38,7 +39,7 @@
     <div class="filter">
         <label>
             <span>Roler:</span>
-            <select name="role-filter" [(ngModel)]="filter.role" (change)="setFilter()">
+            <select name="role-filter" [(ngModel)]="filter.role" (change)="setRoleFilter()">
                 <option value="" selected>Alla</option>
                 <option value="user">Användare</option>
                 <option value="admin">Admin</option>

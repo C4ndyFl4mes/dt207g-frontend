@@ -87,7 +87,7 @@ h2 {
 
     .header-desc {
         grid-area: 1/2/2/3;
-        margin-top: 3rem;
+        // margin-top: 3rem;
 
         h4, p {
             margin: 0;
@@ -106,6 +106,8 @@ h2 {
         column-gap: 1rem;
         small {
             margin-left: auto;
+            line-height: 2rem;
+            margin-right: 1rem;
         }
     }
 
@@ -115,7 +117,7 @@ h2 {
     }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 600px) {
     .item {
         display: flex;
         flex-direction: column;
@@ -128,6 +130,7 @@ h2 {
 
         .header-desc {
             margin-top: 0;
+            padding-top: 1rem;
             h4 {
                 text-align: center;
             }
