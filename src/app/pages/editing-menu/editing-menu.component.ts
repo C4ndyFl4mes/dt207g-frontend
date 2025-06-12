@@ -78,10 +78,11 @@ export class EditingMenuComponent implements OnInit {
    */
   loadCategories(): void {
     this.isLoading.set(true);
-    this.cafeService.getCategoriesPag(this.categoryPagination().currentPage, this.categoryPagination().pageSize).subscribe({
+    this.cafeService.getCategories(this.categoryPagination().currentPage, this.categoryPagination().pageSize).subscribe({
       next: (response) => {
         this.categoriesPag.set(response.data.categories);
-        this.categoryPagination.set(response.data.pagination);
+        this.categoryPagination.set(response.data.pagination!); // ! ska fungera eftersom vi skickar med currentPage och pageSize som ska alltid ge oss pagination.
+        if (this.categoryPagination().totalPages === 0) this.categoryPagination().totalPages = 1;
         this.isLoading.set(false);
       },
       error: () => {
@@ -108,6 +109,7 @@ export class EditingMenuComponent implements OnInit {
       next: (response) => {
         this.products.set(response.data.products);
         this.pagination.set(response.data.pagination);
+        if (this.pagination().totalPages === 0) this.pagination().totalPages = 1;
         this.isLoading.set(false);
       },
       error: (error) => {

@@ -1,8 +1,6 @@
-<!-- <p class="breadcrumbs">
-            <span>Meny</span> >
-            <span>{{product().inCategory.name.normal}}</span> >
-            <span>{{product().name.normal}}</span>
-        </p> -->
+<button class="back" (click)="back()">
+    <i class="fa-solid fa-circle-left"></i>
+</button>
 <div class="product">
     <div class="image-holder">
         <img src="defaultimage_large.jpg" width="350" height="350">
@@ -69,7 +67,7 @@
     </div>
     } @else {
     @if (!isLoading()) {
-    <div class="loading-reviews">
+    <div class="loading">
         Lägg till den första recensionen!
     </div>
     }

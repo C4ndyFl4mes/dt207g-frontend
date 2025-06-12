@@ -95,11 +95,13 @@ button {
 .pagination-controls {
     max-width: fit-content;
     width: 90%;
-    margin: 0 auto;
+    // margin: 0 auto;
+    justify-self: center;
     margin-top: 2rem;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+
+    justify-content: center;
 
     white-space: nowrap;
     height: 2rem;
@@ -107,7 +109,7 @@ button {
     box-shadow: 0.063rem 0 1.25rem 0 gold;
 
     button {
-        flex: 1;
+        width: 2rem;
 
         display: flex;
         justify-content: center;
@@ -115,8 +117,9 @@ button {
     }
 
     p {
+        font-size: 1rem;
         height: 2rem;
-        padding: 0 1rem 0 1rem;
+        padding: 0 0.5rem 0 0.5rem;
         display: flex;
         align-items: center;
 
@@ -139,6 +142,7 @@ button {
 .back {
     border-radius: 1rem;
     font-size: 1rem;
+    margin-bottom: 1rem;
 }
 
 .timestamp {
@@ -173,6 +177,7 @@ button {
 }
 
 .loading {
+    margin-top: 1.5rem;
     text-align: center;
     align-self: top;
 }
@@ -257,4 +262,24 @@ form {
 }
 .normal-list::-webkit-scrollbar {
     display: none;
+}
+
+@media screen and (max-width: 400px) {
+    .switch {
+        flex-wrap: wrap;
+        
+        .left-button {
+            width: 100%;
+            border-radius: 0;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+        }
+
+        .right-button {
+            width: 100%;
+            border-radius: 0;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+        }
+    }
 }

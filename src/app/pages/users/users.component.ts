@@ -82,6 +82,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.pagination.set(response.data.pagination);
         this.users.set(response.data.users);
+        if (this.pagination().totalPages === 0) this.pagination().totalPages = 1;
         this.isLoading.set(false);
       },
       error: (error) => {

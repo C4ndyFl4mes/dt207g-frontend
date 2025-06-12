@@ -51,6 +51,7 @@
             <label>
                 <span>Kategori:</span>
                 <select [(ngModel)]="categoryFilter" (change)="filter()">
+                    <option value="" selected>Alla</option>
                     @for (category of categories(); track $index) {
                     <option [value]="category.name.slug">{{category.name.normal}}</option>
                     }
@@ -62,6 +63,7 @@
             Laddar produkter...
         </div>
         } @else {
+        @if (products().length > 0) {
         @for (item of products(); track item.id) {
         <article class="item" title="[Updaterad: {{item.updated}}; Skapad: {{item.created}}]">
             <div class="price">{{item.price}} SEK</div>
@@ -77,6 +79,11 @@
                 <button (click)="deleteProduct(item.id)">Ta bort</button>
             </div>
         </article>
+        }
+        } @else {
+        <div class="loading">
+            Tyvärr finns det ingenting i denna kategori än.
+        </div>
         }
         }
     </div>

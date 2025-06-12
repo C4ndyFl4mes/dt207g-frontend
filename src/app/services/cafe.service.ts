@@ -17,12 +17,11 @@ export class CafeService {
 
   constructor(private http: HttpClient, private accountService: AccountService) { }
 
-  getCategories(): Observable<Response<{ categories: Array<Category> }>> {
+  getCategories(page?: number, limit?: number): Observable<Response<{ pagination?: Pagination; categories: Array<Category> }>> {
+    if (page && limit) {
+      return this.http.get<Response<{ pagination: Pagination; categories: Array<Category> }>>(`${this.url}/categories?page=${page}&limit=${limit}`);
+    }
     return this.http.get<Response<{ categories: Array<Category> }>>(`${this.url}/categories`);
-  }
-
-  getCategoriesPag(page: number, limit: number): Observable<Response<{ pagination: Pagination; categories: Array<Category> }>> {
-    return this.http.get<Response<{ pagination: Pagination; categories: Array<Category> }>>(`${this.url}/categories-pag?page=${page}&limit=${limit}`);
   }
 
   getAllProducts(page: number = 1, limit: number = 10): Observable<Response<{ pagination: Pagination; products: Array<Product> }>> {

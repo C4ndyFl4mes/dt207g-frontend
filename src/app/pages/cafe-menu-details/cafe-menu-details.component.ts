@@ -285,4 +285,11 @@ export class CafeMenuDetailsComponent implements OnInit {
       }
     });
   }
+
+   /**
+   * Förflyttar användaren till föregående meny.
+   */
+  back(): void {
+    this.router.navigate(['/meny', this.categorySlug()]);
+  }
 }

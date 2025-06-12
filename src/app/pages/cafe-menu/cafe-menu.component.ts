@@ -17,8 +17,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class CafeMenuComponent implements OnInit {
 
-  activeCategorySelection = "";
-  activeCategorySlug = signal<string | null>(""); // Den nuvarande kategorin.
+  activeCategorySelection: string | null = "";
+  activeCategorySlug = signal<string | null>(null); // Den nuvarande kategorin.
   categories = signal<Array<Category>>([]); // Array av kategorier.
   products = signal<Array<Product>>([]); // Array av produkter.
 
@@ -45,6 +45,10 @@ export class CafeMenuComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       const category = params.get("categoryslug");
       this.activeCategorySlug.set(category);
+      if (this.activeCategorySlug() !== null) {
+        this.activeCategorySelection = this.activeCategorySlug();
+
+      }
       this.pagination.update(p => ({ ...p, currentPage: 1 }));
       this.loadProducts();
       this.navigate();
@@ -58,18 +62,19 @@ export class CafeMenuComponent implements OnInit {
   loadProducts(): void {
     const category = this.activeCategorySlug();
     const page = this.pagination().currentPage;
-    this.isLoading.set(true); 
+    this.isLoading.set(true);
 
     // Bereonde på en kategori är vald eller inte, antingen hämtar alla produkter eller enbart från en kategori.
     const fetch = category
       ? this.cafeService.getProductsFromCategory(category, page, this.pagination().pageSize)
       : this.cafeService.getAllProducts(page, this.pagination().pageSize);
 
-      // Utför själva hämtningen.
+    // Utför själva hämtningen.
     fetch.subscribe({
       next: (response) => {
         this.products.set(response.data.products);
         this.pagination.set(response.data.pagination);
+        if (this.pagination().totalPages === 0) this.pagination().totalPages = 1;
         this.isLoading.set(false);
       },
       error: () => {
@@ -79,9 +84,18 @@ export class CafeMenuComponent implements OnInit {
   }
 
   /**
-   * Navigerar mellan kategorier.
+   * Navigerar till kategori vid start om det finns.
    */
   navigate(): void {
+    if (this.activeCategorySlug() !== null) {
+      this.router.navigate(['/meny', this.activeCategorySlug()]);
+    }
+  }
+
+  /**
+   * Navigerar mellan kategorier.
+   */
+  navigateBetweenCategories(): void {
     this.router.navigate(['/meny', this.activeCategorySelection]);
   }
 
