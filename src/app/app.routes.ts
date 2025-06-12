@@ -16,7 +16,7 @@ export const routes: Routes = [
     { path: "meny/:categoryslug", component: CafeMenuComponent },
     { path: "meny/:categoryslug/:itemslug", component: CafeMenuDetailsComponent },
     { path: "instrumentpanelen", component: DashboardComponent, canActivate: [AuthGuard]  },
-    { path: "instrumentpanelen/anvandare", component: UsersComponent },
+    { path: "instrumentpanelen/anvandare", component: UsersComponent, canActivate: [AuthGuard] },
     { path: "instrumentpanelen/anvandare/:userid", component: ProfileComponent },
     { path: "instrumentpanelen/meny", component: EditingMenuComponent, canActivate: [AuthGuard] },
     { path: "", pathMatch: "full", redirectTo: "hem" }

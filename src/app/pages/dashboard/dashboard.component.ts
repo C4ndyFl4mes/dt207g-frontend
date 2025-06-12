@@ -19,11 +19,6 @@ export class DashboardComponent {
       routeLink: "meny",
       icon: "menu.svg",
       label: "Meny"
-    },
-    {
-      routeLink: "tjanster",
-      icon: "services.svg",
-      label: "Tjänster"
     }
   ];
 }

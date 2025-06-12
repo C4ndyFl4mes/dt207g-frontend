@@ -29,9 +29,18 @@
   width: calc(100% - 5rem);
   margin-left: 5rem;
 }
-
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
   .body {
-    padding-left: 3rem;
+    margin-left: 0;
+    padding-left: 0;
+    width: 100vw;
+  }
+  .body-md-screen {
+    margin-left: 0;
   }
 }
+// @media screen and (max-width: 500px) {
+//   .body {
+//     padding-left: 3rem;
+//   }
+// }

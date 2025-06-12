@@ -26,7 +26,7 @@
     </div>
     } @else {
     @for (item of products(); track item.id) {
-    <article class="item" (click)="productDetails(item)" [title]="setTitle(item.name.normal)">
+    <article class="item">
         <div class="price">{{item.price}} SEK</div>
         <div class="image-holder">
             <img src="defaultimage.jpg" width="100" height="100">
@@ -38,6 +38,7 @@
         <p class="rating">
             {{setRating(item.rating)}}
         </p>
+        <button class="product-details" (click)="productDetails(item)" [title]="setTitle(item.name.normal)">Recensioner</button>
     </article>
     }
     }

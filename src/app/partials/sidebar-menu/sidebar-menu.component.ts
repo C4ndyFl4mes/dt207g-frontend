@@ -16,7 +16,7 @@ export class SidebarMenuComponent implements OnInit {
 
   isLoggedIn = signal<boolean>(false);
   userInfo = signal<User | null>(null);
-  
+
   items = [
     {
       routeLink: "hem",
@@ -40,7 +40,7 @@ export class SidebarMenuComponent implements OnInit {
     }
   ];
 
- 
+
   /**
    * 
    * @param accountService - hanterar konton.
@@ -73,6 +73,15 @@ export class SidebarMenuComponent implements OnInit {
         this.items.push(item);
       }
     });
+  }
+
+  /**
+   * Automatiskt fäller ihop menyn när användaren navigerar mellan sidor.
+   */
+  autoHideWhenSelectedOnSmallScreen(): void {
+    if (window.innerWidth < 700) {
+      this.changeIsSidebarMenuCollapsed.emit(!this.isSidebarMenuCollapsed());
+    }
   }
 
   canSeeItem(link: string): boolean {

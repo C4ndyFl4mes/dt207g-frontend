@@ -1,20 +1,20 @@
 <div class="sidenav" [ngClass]="isSidebarMenuCollapsed() ? 'sidenav-collapsed' : ''">
     <div class="logo-container">
-        <button class="logo" (click)="toggleCollapse()">
+        <button class="logo" (click)="toggleCollapse()" [class]="isSidebarMenuCollapsed() ? 'center' : ''">
             <i class="fa-solid fa-bars"></i>
         </button>
         @if (!isSidebarMenuCollapsed()) {
-        <div class="logo-text">Sci-Fi Kaféet</div>
+        <h1 class="logo-text">Sci-Fi Kaféet</h1>
         <button class="btn-close" (click)="closeSidenav()">
             <i class="fa-solid fa-xmark fa-times close-icon"></i>
         </button>
         }
     </div>
-    <div class="sidenav-nav">
+    <div class="sidenav-nav" [class]="isSidebarMenuCollapsed() ? 'center' : ''">
         @for (item of items; track $index) {
         <li class="sidenav-nav-item" [class]="canSeeItem(item.routeLink) ? '' : 'hide'">
             <a class="sidenav-nav-link" [routerLink]="item.routeLink" routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: false }">
+                [routerLinkActiveOptions]="{ exact: false }" (click)="autoHideWhenSelectedOnSmallScreen()">
                 <i class="sidenav-link-icon" [class]="item.icon"></i>
                 @if (!isSidebarMenuCollapsed()) {
                 <span class="sidenav-link-text">{{item.label}}</span>
@@ -24,3 +24,15 @@
         }
     </div>
 </div>
+@if (isSidebarMenuCollapsed()) {
+<div class="small-screen">
+    <button (click)="toggleCollapse()">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+    <h1 class="logo-text">Sci-Fi Kaféet</h1>
+</div>
+}
+
+<!-- <button class="logo " (click)="toggleCollapse()">
+    <i class="fa-solid fa-bars"></i>
+</button> -->

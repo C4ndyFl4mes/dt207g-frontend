@@ -1,5 +1,4 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { SidebarMenuComponent } from "./partials/sidebar-menu/sidebar-menu.component";
 import { MainComponent } from "./partials/main/main.component";
 
@@ -11,7 +10,7 @@ import { MainComponent } from "./partials/main/main.component";
 })
 export class AppComponent implements OnInit {
   title = 'cafe';
-  isSidebarMenuCollapsed = signal<boolean>(false);
+  isSidebarMenuCollapsed = signal<boolean>(true);
   screenWidth = signal<number>(window.innerWidth);
 
   @HostListener("window:resize")
@@ -23,7 +22,7 @@ export class AppComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    this.isSidebarMenuCollapsed.set(this.screenWidth() < 768);
+    this.isSidebarMenuCollapsed.set(this.screenWidth() < 1200);
   }
   
   changeIsSidebarMenuCollapsed(isSidebarMenuCollapsed: boolean): void {

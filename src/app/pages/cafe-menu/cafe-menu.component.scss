@@ -16,6 +16,13 @@
     box-shadow: 0.063rem 0 1.25rem 0 gold;
 }
 
+.product-details {
+    grid-area: 3/2/4/3;
+    margin-left: auto;
+    border-top-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
 @media screen and (max-width: 600px) {
     .item {
         display: flex;
