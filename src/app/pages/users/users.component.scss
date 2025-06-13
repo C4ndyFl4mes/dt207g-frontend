@@ -15,7 +15,8 @@ form {
         border-top-left-radius: 1rem;
     }
 
-    button:first-child.hidden ~ button:last-child {
+
+    button:first-child.hidden ~ button:nth-child(2) {
         margin-left: auto;
         border-top-left-radius: 1rem;
     }

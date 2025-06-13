@@ -109,6 +109,13 @@ export class AccountComponent {
           data: `${response.data.account.firstname} ${response.data.account.lastname}`,
           message: "Du är nu inloggad som "
         });
+        setTimeout(() => {
+          this.success.set({
+            success: false,
+            data: "",
+            message: ""
+          });
+        }, 2000);
       },
       error: (error) => {
         this.errors().push(error.error.message);

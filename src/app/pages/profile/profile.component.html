@@ -1,1 +1,92 @@
-<p>{{userID}}</p>
+<button class="back" (click)="back()">
+    <i class="fa-solid fa-circle-left"></i>
+</button>
+@if (userID === "") {
+<div class="loading">
+    Ingen användare är vald.
+</div>
+} @else {
+@if (isLoading()) {
+<div class="loading">
+    Laddar in profil...
+</div>
+} @else {
+<article class="user-profile">
+    <h2>{{currentUser().firstname}} {{currentUser().lastname}}</h2>
+    <div class="image-holder">
+        <img src="user.svg" width="250px" height="250px">
+    </div>
+    <small>{{currentUser().role?.replace(currentUser().role?.charAt(0)!,
+        currentUser().role?.charAt(0)?.toUpperCase()!)}} <br /> {{currentUser().registered}}</small>
+    <div class="reviews-stats">
+        <h3>Recensionsstatistik</h3>
+        <label>
+            <span>Antal recensioner:</span>
+            <input type="text" readonly [value]="reviews_section().pagination.totalItems">
+        </label>
+        <label>
+            <span>Genomsnittsbetyg:</span>
+            <input type="text" readonly [value]="calcAVGRating()">
+        </label>
+        <label>
+            <span>Antal ord:</span>
+            <input type="text" readonly [value]="calcTotalWords()">
+        </label>
+        <label>
+            <span>Senaste aktivitet:</span>
+            <input type="text" readonly
+                [value]="reviews_section().reviews.length > 0 ? reviews_section().reviews[0].posted: 'Ingen aktivitet'">
+        </label>
+    </div>
+</article>
+<h3>{{currentUser().firstname}}s recensioner</h3>
+<app-form-message [success]="success()" [errors]="errors()"></app-form-message>
+@if (reviews_section().pagination.totalPages > 0) {
+<div class="pagination-controls">
+    <button class="previous" (click)="previous()">
+        <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <p>Sida {{this.reviews_section().pagination.currentPage}} av
+        {{this.reviews_section().pagination.totalPages}}</p>
+    <button class="next" (click)="next()">
+        <i class="fa-solid fa-arrow-right"></i>
+    </button>
+</div>
+} @else {
+@if (!isLoading()) {
+<div class="loading">
+    Det finns ingen aktivitet att visa.
+</div>
+}
+}
+<div class="normal-list">
+    @if (isLoading()) {
+    <div class="loading">
+        Laddar recensioner...
+    </div>
+    } @else {
+    @if (reviews_section().reviews.length > 0) {
+    @for (item of reviews_section().reviews; track item.id) {
+    <article class="item review">
+        <div class="image-holder">
+            <img src="user.svg" width="100" height="100">
+        </div>
+        <div class="header-desc">
+            @if (item.rating === 1) {
+            <h4>{{currentUser().firstname}} gav <span>{{item.rating}}</span> stjärna till {{item.product}}</h4>
+            } @else {
+            <h4>{{currentUser().firstname}} gav <span>{{item.rating}}</span> stjärnor till {{item.product}}</h4>
+            }
+            <p>{{item.message}}</p>
+        </div>
+        <div class="actions">
+            <small>{{item.posted}}</small>
+            <button class="delete-review" (click)="deleteReview(item.id)">Ta bort</button>
+        </div>
+    </article>
+    }
+    }
+    }
+</div>
+}
+}

@@ -2,7 +2,7 @@
     @if (currentUser().id === "") {
     <button (click)="login()">Logga in</button>
     } @else {
-    <button  (click)="logout()">Logga ut</button>
+    <button (click)="logout()">Logga ut</button>
     }
 </div>
 @if (currentUser().id !== "") {
@@ -66,11 +66,12 @@
         </label>
         <label>
             <span>Senaste aktivitet:</span>
-            <input type="text" readonly [value]="reviews_section().reviews[0].posted">
+            <input type="text" readonly [value]="reviews_section().reviews.length > 0 ? reviews_section().reviews[0].posted : 'Ingen aktivitet'">
         </label>
     </div>
     }
 </article>
+<h3>Dina recensioner</h3>
 @if (reviews_section().pagination.totalPages > 0) {
 <div class="pagination-controls">
     <button class="previous" (click)="previous()">
@@ -95,6 +96,7 @@
         Laddar recensioner...
     </div>
     } @else {
+    @if (reviews_section().reviews.length > 0) {
     @for (item of reviews_section().reviews; track item.id) {
     <article class="item review">
         <div class="image-holder">
@@ -112,6 +114,7 @@
             <small>{{item.posted}}</small>
         </div>
     </article>
+    }
     }
     }
 </div>

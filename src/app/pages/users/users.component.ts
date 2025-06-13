@@ -241,6 +241,16 @@ export class UsersComponent implements OnInit, OnDestroy {
             data: "",
             message: "Användaren ändrades."
           });
+          if (response.data.account.id === this.accountService.getUserInfo()!.id) {
+            this.accountService.setUser({
+              id: this.accountService.getUserInfo()!.id,
+              firstname: response.data.account.firstname,
+              lastname: response.data.account.lastname,
+              role: this.accountService.getUserInfo()!.role,
+              email: response.data.account.email,
+              registered: response.data.account.registered
+            }, this.accountService.getToken()!);
+          }
           this.loadUsers();
           this.user = {
             firstname: "",
@@ -249,6 +259,13 @@ export class UsersComponent implements OnInit, OnDestroy {
             password: ""
           };
           this.userID = "";
+          setTimeout(() => {
+            this.success.set({
+              success: false,
+              data: "",
+              message: ""
+            });
+          }, 1500);
         },
         error: (error) => {
           this.errors().push(error.error.message);
@@ -272,6 +289,13 @@ export class UsersComponent implements OnInit, OnDestroy {
           message: "Användaren raderades."
         });
         this.loadUsers();
+        setTimeout(() => {
+          this.success.set({
+            success: false,
+            data: "",
+            message: ""
+          });
+        }, 1500);
       },
       error: (error) => {
         this.errors().push(error.error.message);
@@ -311,6 +335,10 @@ export class UsersComponent implements OnInit, OnDestroy {
    */
   getID(): string | undefined {
     return this.accountService.getUserInfo()?.id;
+  }
+
+  openProfile(id: string): void {
+    this.route.navigate([id], { relativeTo: this.activeRoute });
   }
 
   /**

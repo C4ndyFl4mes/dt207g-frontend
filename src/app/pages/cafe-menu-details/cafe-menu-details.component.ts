@@ -200,6 +200,13 @@ export class CafeMenuDetailsComponent implements OnInit {
               message: "Recension tillagd."
             });
             this.loadProduct(); // Laddar om produkten och dess recensioner.
+            setTimeout(() => {
+              this.success.set({
+                success: false,
+                data: "",
+                message: ""
+              });
+            }, 1000);
           },
           error: (error) => {
             this.errors().push(error.error.message);
@@ -232,6 +239,13 @@ export class CafeMenuDetailsComponent implements OnInit {
             data: "",
             message: "Recension raderad."
           });
+          setTimeout(() => {
+            this.success.set({
+              success: false,
+              data: "",
+              message: ""
+            });
+          }, 1000);
         },
         error: (error) => {
           this.errors().push(error.error.message);
@@ -286,9 +300,9 @@ export class CafeMenuDetailsComponent implements OnInit {
     });
   }
 
-   /**
-   * Förflyttar användaren till föregående meny.
-   */
+  /**
+  * Förflyttar användaren till föregående meny.
+  */
   back(): void {
     this.router.navigate(['/meny', this.categorySlug()]);
   }

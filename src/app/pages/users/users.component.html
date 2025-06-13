@@ -78,6 +78,7 @@
         </small>
 
         <div class="actions">
+            <button (click)="openProfile(item.id)">Profil</button>
             <button (click)="markUser(item.id, item)"
                 [disabled]="(item.role === 'admin' || item.role === 'root') && isAdmin() && item.id !== getID()"
                 [title]="(item.role === 'admin' || item.role === 'root') && isAdmin() && item.id !== getID() ? 'Du har inte behörighet att ändra denna användare.' : ''">Ändra</button>

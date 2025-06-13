@@ -64,13 +64,15 @@ export class HomeComponent implements OnInit {
     this.loadProfile();
   }
 
+  /**
+   * Laddar in profil.
+   */
   loadProfile(): void {
     const user = this.accountService.getUserInfo();
     if (user) {
       this.isLoading.set(true);
       this.userService.getProfile(user.id).subscribe({
         next: (response) => {
-          console.log(response);
           this.currentUser.set(response.data.account);
           this.reviews_section.set(response.data.reviews_section);
           this.updateUser = {
@@ -89,15 +91,26 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  /**
+   * Beräknar genomsnittsbetyget som användaren gett produkter.
+   * @returns Genomsnittsbetyg.
+   */
   calcAVGRating(): string {
     let sum: number = 0;
     this.reviews_section().reviews.forEach(review => {
       sum += review.rating;
     });
     const avgRating: number = sum / this.reviews_section().pagination.totalItems;
+    if (!avgRating) {
+      return "?";
+    }
     return `${Math.round(avgRating * 100) / 100} ★`;
   }
 
+  /**
+   * Beräknar antalet ord från recensioner.
+   * @returns antal ord.
+   */
   calcTotalWords(): number {
     let sum: number = 0;
     this.reviews_section().reviews.forEach(review => {
@@ -106,6 +119,9 @@ export class HomeComponent implements OnInit {
     return sum;
   }
 
+  /**
+   * Uppdaterar användaren-
+   */
   updateUserCompletely(): void {
     const user = this.updateUser;
 
@@ -146,7 +162,7 @@ export class HomeComponent implements OnInit {
     if (this.errors().length === 0) {
       this.userService.editUser(this.accountService.getUserInfo()!.id, user.firstname, user.lastname, user.email, user.password).subscribe({
         next: (response) => {
-
+          // Uppdaterar användaruppigfter i webbläsaren.
           this.accountService.setUser({
             id: this.accountService.getUserInfo()!.id,
             firstname: response.data.account.firstname,
@@ -155,7 +171,7 @@ export class HomeComponent implements OnInit {
             email: response.data.account.email,
             registered: response.data.account.registered
           }, this.accountService.getToken()!);
-          this.loadProfile();
+          this.loadProfile(); // Laddar om profilen.
           this.success.set({
             success: response.success,
             data: "",

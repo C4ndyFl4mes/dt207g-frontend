@@ -215,6 +215,13 @@ export class EditingMenuComponent implements OnInit {
             description: "",
             categoryID: ""
           };
+          setTimeout(() => {
+            this.success.set({
+              success: false,
+              data: "",
+              message: ""
+            });
+          }, 1500);
         },
         error: (error) => {
           this.errors().push(error.error.message);
@@ -260,6 +267,13 @@ export class EditingMenuComponent implements OnInit {
             description: "",
             categoryID: ""
           };
+          setTimeout(() => {
+            this.success.set({
+              success: false,
+              data: "",
+              message: ""
+            });
+          }, 1500);
         },
         error: (error) => {
           this.errors().push(error.error.message);
@@ -283,6 +297,13 @@ export class EditingMenuComponent implements OnInit {
           message: "Produkten raderades."
         });
         this.loadProducts();
+        setTimeout(() => {
+          this.success.set({
+            success: false,
+            data: "",
+            message: ""
+          });
+        }, 1500);
       }, error: (error) => {
         this.errors().push(error.error.message);
       }
@@ -321,6 +342,13 @@ export class EditingMenuComponent implements OnInit {
           this.loadCategories();
           this.categoryID = "";
           this.category.name = "";
+          setTimeout(() => {
+            this.success.set({
+              success: false,
+              data: "",
+              message: ""
+            });
+          }, 1500);
         }, error: (error) => {
           this.errors().push(error.error.message);
         }
@@ -351,6 +379,13 @@ export class EditingMenuComponent implements OnInit {
           this.loadCategories();
           this.categoryID = "";
           this.category.name = "";
+          setTimeout(() => {
+            this.success.set({
+              success: false,
+              data: "",
+              message: ""
+            });
+          }, 1500);
         }, error: (error) => {
           this.errors().push(error.error.message);
         }
@@ -373,6 +408,13 @@ export class EditingMenuComponent implements OnInit {
           message: "Kategorin raderades."
         });
         this.loadCategories();
+        setTimeout(() => {
+          this.success.set({
+            success: false,
+            data: "",
+            message: ""
+          });
+        }, 1500);
       }, error: (error) => {
         this.errors().push(error.error.message);
       }
