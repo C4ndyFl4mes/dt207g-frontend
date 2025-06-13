@@ -1,0 +1,30 @@
+p {
+    text-align: justify;
+}
+
+blockquote {
+    width: 100%;
+    max-width: 500px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    .qoute {
+        font-style: italic;
+    }
+    .by {
+        align-self: flex-end;
+        font-weight: 700;
+    }
+}
+
+table {
+    text-align: left;
+    border-collapse: collapse;
+}
+th, td {
+    line-height: 1.5rem;
+}
+td:last-child {
+    padding-left: 2rem;
+}

@@ -8,16 +8,18 @@ import { AuthGuard } from './guards/auth.guard';
 import { UsersComponent } from './pages/users/users.component';
 import { EditingMenuComponent } from './pages/editing-menu/editing-menu.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { StartComponent } from './pages/start/start.component';
 
 export const routes: Routes = [
-    { path: "hem", component: HomeComponent },
+    { path: "start", component: StartComponent },
+    { path: "profil", component: HomeComponent },
     { path: "konto", component: AccountComponent },
     { path: "meny", component: CafeMenuComponent },
     { path: "meny/:categoryslug", component: CafeMenuComponent },
     { path: "meny/:categoryslug/:itemslug", component: CafeMenuDetailsComponent },
     { path: "instrumentpanelen", component: DashboardComponent, canActivate: [AuthGuard]  },
     { path: "instrumentpanelen/anvandare", component: UsersComponent, canActivate: [AuthGuard] },
-    { path: "instrumentpanelen/anvandare/:userid", component: ProfileComponent },
+    { path: "instrumentpanelen/anvandare/:userid", component: ProfileComponent, canActivate: [AuthGuard] },
     { path: "instrumentpanelen/meny", component: EditingMenuComponent, canActivate: [AuthGuard] },
-    { path: "", pathMatch: "full", redirectTo: "hem" }
+    { path: "", pathMatch: "full", redirectTo: "start" }
 ];

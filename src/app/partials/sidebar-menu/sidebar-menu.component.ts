@@ -19,14 +19,19 @@ export class SidebarMenuComponent implements OnInit {
 
   items = [
     {
-      routeLink: "hem",
+      routeLink: "start",
       icon: "fa-solid fa-house",
-      label: "Hem"
+      label: "Start"
     },
     {
       routeLink: "meny",
       icon: "fa-solid fa-list",
       label: "Meny"
+    },
+    {
+      routeLink: "profil",
+      icon: "fa-solid fa-address-card",
+      label: "Profil"
     },
     {
       routeLink: "instrumentpanelen",
