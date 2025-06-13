@@ -279,6 +279,16 @@ export class UsersComponent implements OnInit, OnDestroy {
     });
   }
 
+  cancel(): void {
+    this.user = {
+      firstname: "",
+      lastname: "",
+      email: "",
+      password: ""
+    };
+    this.userID = "";
+  }
+
   /**
    * Kollar om den inloggade användaren är root.
    * @returns är root eller inte.

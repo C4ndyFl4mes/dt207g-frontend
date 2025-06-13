@@ -1,1 +1,122 @@
-<p>home works!</p>
+<div class="top-buttons">
+    @if (currentUser().id === "") {
+    <button (click)="login()">Logga in</button>
+    } @else {
+    <button  (click)="logout()">Logga ut</button>
+    }
+</div>
+@if (currentUser().id !== "") {
+
+<article class="user-profile">
+    <h2>{{currentUser().firstname}} {{currentUser().lastname}}</h2>
+    <div class="image-holder">
+        <img src="user.svg" width="250px" height="250px">
+    </div>
+    <small>{{currentUser().role?.replace(currentUser().role?.charAt(0)!,
+        currentUser().role?.charAt(0)?.toUpperCase()!)}} <br /> {{currentUser().registered}}</small>
+    <div class="switch">
+        <button class="left-button" [class]="!isUpdating() ? 'active' : ''"
+            (click)="isUpdating.set(false)">Profil</button>
+        <button class="right-button" [class]="isUpdating() ? 'active' : ''" (click)="isUpdating.set(true)">Ändra
+            profil</button>
+    </div>
+    @if (isUpdating()) {
+    <form class="edit-user">
+        <label>
+            <span>Förnamn:</span>
+            <input type="text" name="firstname" autocomplete="given-name" [(ngModel)]="updateUser.firstname"
+                [readOnly]="!isUpdating()">
+        </label>
+        <label>
+            <span>Efternamn:</span>
+            <input type="text" name="lastname" autocomplete="family-name" [(ngModel)]="updateUser.lastname"
+                [readOnly]="!isUpdating()">
+        </label>
+        <label>
+            <span>E-post:</span>
+            <input type="email" name="email" autocomplete="email" [(ngModel)]="updateUser.email"
+                [readOnly]="!isUpdating()">
+        </label>
+        <label>
+            <span>Lösenord:</span>
+            <input type="password" name="current-password" autocomplete="current-password"
+                [(ngModel)]="updateUser.password">
+            <small>(Ändrar inte lösenordet)</small>
+        </label>
+        <div class="actions">
+            <button type="button" (click)="updateUserCompletely()">Ändra</button>
+        </div>
+    </form>
+    <app-form-message [success]="success()" [errors]="errors()"></app-form-message>
+    } @else {
+
+    <div class="reviews-stats">
+        <h3>Recensionsstatistik</h3>
+        <label>
+            <span>Antal recensioner:</span>
+            <input type="text" readonly [value]="reviews_section().pagination.totalItems">
+        </label>
+        <label>
+            <span>Genomsnittsbetyg:</span>
+            <input type="text" readonly [value]="calcAVGRating()">
+        </label>
+        <label>
+            <span>Antal ord:</span>
+            <input type="text" readonly [value]="calcTotalWords()">
+        </label>
+        <label>
+            <span>Senaste aktivitet:</span>
+            <input type="text" readonly [value]="reviews_section().reviews[0].posted">
+        </label>
+    </div>
+    }
+</article>
+@if (reviews_section().pagination.totalPages > 0) {
+<div class="pagination-controls">
+    <button class="previous" (click)="previous()">
+        <i class="fa-solid fa-arrow-left"></i>
+    </button>
+    <p>Sida {{this.reviews_section().pagination.currentPage}} av
+        {{this.reviews_section().pagination.totalPages}}</p>
+    <button class="next" (click)="next()">
+        <i class="fa-solid fa-arrow-right"></i>
+    </button>
+</div>
+} @else {
+@if (!isLoading()) {
+<div class="loading">
+    Lägg till den första recensionen!
+</div>
+}
+}
+<div class="normal-list">
+    @if (isLoading()) {
+    <div class="loading">
+        Laddar recensioner...
+    </div>
+    } @else {
+    @for (item of reviews_section().reviews; track item.id) {
+    <article class="item review">
+        <div class="image-holder">
+            <img src="user.svg" width="100" height="100">
+        </div>
+        <div class="header-desc">
+            @if (item.rating === 1) {
+            <h4>Du gav <span>{{item.rating}}</span> stjärna till {{item.product}}</h4>
+            } @else {
+            <h4>Du gav <span>{{item.rating}}</span> stjärnor till {{item.product}}</h4>
+            }
+            <p>{{item.message}}</p>
+        </div>
+        <div class="actions">
+            <small>{{item.posted}}</small>
+        </div>
+    </article>
+    }
+    }
+</div>
+} @else {
+<div class="loading">
+    Du måste vara inloggad för att se din profil.
+</div>
+}

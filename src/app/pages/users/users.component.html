@@ -13,15 +13,19 @@
     </label>
     <label [class]="!isRoot() ? 'hidden' : ''">
         <span>E-post:</span>
-        <input type="email" name="email" autocomplete="email" [(ngModel)]="user.email">
+        <input type="email" name="email" autocomplete="email" [disabled]="userID !== ''"
+            [title]="userID !== '' ? 'Kan bara användas vid skapelse av ny admin.' : ''" [(ngModel)]="user.email">
     </label>
     <label [class]="!isRoot() ? 'hidden' : ''">
         <span>Lösenord:</span>
-        <input type="password" autocomplete="current-password" name="password" [(ngModel)]="user.password">
+        <input type="password" autocomplete="current-password" [disabled]="userID !== ''"
+            [title]="userID !== '' ? 'Kan bara användas vid skapelse av ny admin.' : ''" name="password"
+            [(ngModel)]="user.password">
     </label>
     <div class="actions">
         <button type="button" (click)="createAdmin()" [class]="!isRoot() ? 'hidden' : ''"
             [disabled]="userID !== ''">Skapa Admin</button>
+        <button type="button" (click)="cancel()">Avbryt</button>
         <button type="button" (click)="editUser()">Ändra</button>
     </div>
 </form>

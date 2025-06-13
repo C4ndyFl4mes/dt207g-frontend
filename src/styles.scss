@@ -263,7 +263,10 @@ form {
 .normal-list::-webkit-scrollbar {
     display: none;
 }
-
+*:disabled {
+    border-color: rgb(160, 136, 0);
+    color: #ffffff98;
+}
 @media screen and (max-width: 400px) {
     .switch {
         flex-wrap: wrap;

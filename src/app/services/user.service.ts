@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Response } from '../models/response';
 import { Pagination } from '../models/pagination';
 import { User } from '../models/user';
+import { Review } from '../models/review';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,15 @@ export class UserService {
   rootURL: string = "http://localhost:3000/api/auth/root/register";
 
   constructor(private http: HttpClient, private accountService: AccountService) { }
+
+  getProfile(id: string): Observable<Response<{ account: User; reviews_section: { pagination: Pagination; reviews: Array<Review> }; }>> {
+    return this.http.get<Response<{ account: User; reviews_section: { pagination: Pagination; reviews: Array<Review> }; }>>(`${this.url}/profile?id=${id}`, {
+      headers: {
+        "content-type": "application/json",
+        "authorization": `Bearer ${this.accountService.getToken()}`
+      }
+    });
+  }
 
   /**
    * Hämtar användare.
@@ -63,7 +73,7 @@ export class UserService {
    * @returns 
    */
   createAdmin(firstname: string, lastname: string, email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.rootURL}`, { firstname, lastname, email, password, role: "admin"}, {
+    return this.http.post<any>(`${this.rootURL}`, { firstname, lastname, email, password, role: "admin" }, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -79,8 +89,8 @@ export class UserService {
    * @param email - nytt värde.
    * @returns 
    */
-  editUser(id: string, firstname: string, lastname: string, email: string): Observable<Response<null>> {
-    return this.http.put<Response<null>>(`${this.url}/user/${id}`, { firstname, lastname, email }, {
+  editUser(id: string, firstname: string, lastname: string, email?: string, currentPassword?: string): Observable<Response<any>> {
+    return this.http.put<Response<any>>(`${this.url}/user/${id}`, { firstname, lastname, email, currentPassword }, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`

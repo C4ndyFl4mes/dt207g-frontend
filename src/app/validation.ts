@@ -21,7 +21,7 @@ export class Validation {
 
     static unableToContainSpecialChar(value: string, fieldName: string): string | null {
         const message = `${fieldName} får inte innehålla specialtecken (!@#$%^&* och liknande).`;
-        return /[^a-zA-Z0-9_ ]/.test(value) ? message : null;
+        return  /[^\p{L}0-9_ -]/u.test(value) ? message : null;
     }
 
     static email(value: string, fieldName: string): string | null {

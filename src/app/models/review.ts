@@ -3,7 +3,8 @@ export interface Review {
     createdBy: string;
     rating: number;
     message: string;
-    fullname: string;
+    fullname?: string;
+    product?: string;
     posted: string;
     edited: string;
 }
