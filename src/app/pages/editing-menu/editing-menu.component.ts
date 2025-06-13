@@ -89,6 +89,9 @@ export class EditingMenuComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+    this.cafeService.getCategories().subscribe((response) => {
+      this.categories.set(response.data.categories);
+    });
   }
 
   /**
@@ -194,7 +197,7 @@ export class EditingMenuComponent implements OnInit {
     const priceFormat = Validation.correctPriceFormat(product.price);
     if (priceFormat) this.errors().push(priceFormat);
 
-    const descriptionRange = Validation.range(product.description, "Produktbeskrivning", 1, 300);
+    const descriptionRange = Validation.range(product.description, "Produktbeskrivning", 1, 2000);
     if (descriptionRange) this.errors().push(descriptionRange);
     const description = Validation.filterPossibleInjection(product.description, "Produktbeskrivning");
     if (description) this.errors().push(description);
@@ -246,7 +249,7 @@ export class EditingMenuComponent implements OnInit {
     const priceFormat = Validation.correctPriceFormat(product.price);
     if (priceFormat) this.errors().push(priceFormat);
 
-    const descriptionRange = Validation.range(product.description, "Produktbeskrivning", 1, 300);
+    const descriptionRange = Validation.range(product.description, "Produktbeskrivning", 1, 2000);
     if (descriptionRange) this.errors().push(descriptionRange);
     const description = Validation.filterPossibleInjection(product.description, "Produktbeskrivning");
     if (description) this.errors().push(description);
@@ -340,6 +343,7 @@ export class EditingMenuComponent implements OnInit {
             message: "Kategorin skapades."
           });
           this.loadCategories();
+          this.loadProducts();
           this.categoryID = "";
           this.category.name = "";
           setTimeout(() => {

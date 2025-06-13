@@ -164,4 +164,19 @@ export class CafeMenuComponent implements OnInit {
     return `Öppna recensioner för ${name}`;
   }
 
+  /**
+   * Visar endast början av beskrivningen.
+   * @param description - beskrivning.
+   * @returns - början av beskrivning.
+   */
+  productDescription(description: string): string {
+    const maxChars = 100;
+    const cut = description.slice(0, maxChars);
+    const lastSpacePosition = cut.lastIndexOf(" ");
+    if (description.length > 100) {
+      return `${cut.slice(0, lastSpacePosition)}...`;
+    }
+    return cut.slice(0, lastSpacePosition);
+  }
+
 }
