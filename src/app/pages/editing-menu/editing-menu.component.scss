@@ -30,12 +30,16 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    min-height: 27.75rem;
-    gap: 4rem;
+    min-height: 0;
+    gap: 1rem;
 
     .item {
         text-align: center;
         padding-top: 1.5rem;
+        height: 5rem;
+        .actions {
+            align-self: flex-end;
+        }
     }
     h3 {
         grid-area: 1/1/2/3;

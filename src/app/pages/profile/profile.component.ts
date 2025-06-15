@@ -51,7 +51,7 @@ export class ProfileComponent implements OnInit {
     reviews: []
   });
 
-  constructor(private router: Router, private route: ActivatedRoute, private accountService: AccountService, private userService: UserService, private reviewService: ReviewService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private userService: UserService, private reviewService: ReviewService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -87,9 +87,7 @@ export class ProfileComponent implements OnInit {
   deleteReview(id: string): void {
     this.success().success = false;
     this.errors.set([]);
-    const token: string | null = this.accountService.getToken();
-    if (token) {
-      this.reviewService.deleteReview(token, id).subscribe({
+      this.reviewService.deleteReview(id).subscribe({
         next: (response) => {
           this.loadProfile();
           this.success.set({
@@ -109,10 +107,7 @@ export class ProfileComponent implements OnInit {
         error: (error) => {
           this.errors().push(error.error.message);
         }
-      })
-    } else {
-      console.log("Token är otillgänlig.");
-    }
+      });
   }
 
   /**

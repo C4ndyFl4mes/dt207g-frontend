@@ -18,6 +18,38 @@
         <h4>Skriv en recension</h4>
         <label class="rating-label">
             <span>Betyg:</span>
+            <select name="rating" [(ngModel)]="reviewInput.rating" (click)="posting.set(true)">
+                <option value="1">1 ★</option>
+                <option value="2">2 ★</option>
+                <option value="3">3 ★</option>
+                <option value="4">4 ★</option>
+                <option value="5">5 ★</option>
+            </select>
+        </label>
+        <div class="message-section">
+            <label class="message-label">
+                <span>Meddelande:</span>
+                <textarea name="message" [(ngModel)]="reviewInput.message" (focus)="posting.set(true)"
+                    (blur)="posting.set(false)"></textarea>
+            </label>
+            <div class="buttons" [class]="posting() ? 'posting' : ''">
+                <button class="cancel" (click)="cancelPost()" (focus)="posting.set(true)" (blur)="posting.set(false)"
+                    (click)="posting.set(false)">Avbryt</button>
+                <button (click)="editReview()" class="edit" (focus)="posting.set(true)" (blur)="posting.set(false)"
+                    (click)="posting.set(false)" [disabled]="currentReviewID === ''">Ändra</button>
+                <button class="add" (click)="postReview()" (focus)="posting.set(true)" (blur)="posting.set(false)"
+                    (click)="posting.set(false)">Lägg till</button>
+
+            </div>
+        </div>
+
+    </div>
+
+    } @else if (currentReviewID !== '') {
+    <div class="post-review">
+        <h4>Ändra din recension</h4>
+        <label class="rating-label">
+            <span>Betyg:</span>
             <select name="rating" [(ngModel)]="reviewInput.rating">
                 <option value="1">1 ★</option>
                 <option value="2">2 ★</option>
@@ -33,15 +65,17 @@
                     (blur)="posting.set(false)"></textarea>
             </label>
             <div class="buttons" [class]="posting() ? 'posting' : ''">
-                <button class="add" (click)="postReview()" (focus)="posting.set(true)" (blur)="posting.set(false)"
-                    (click)="posting.set(false)">Lägg till</button>
                 <button class="cancel" (click)="cancelPost()" (focus)="posting.set(true)" (blur)="posting.set(false)"
                     (click)="posting.set(false)">Avbryt</button>
+                <button (click)="editReview()" class="edit" (focus)="posting.set(true)" (blur)="posting.set(false)"
+                    (click)="posting.set(false)" [disabled]="currentReviewID === ''">Ändra</button>
+                <button class="add" (click)="postReview()" (focus)="posting.set(true)" (blur)="posting.set(false)"
+                    (click)="posting.set(false)">Lägg till</button>
+
             </div>
         </div>
-        
+
     </div>
-    
     } @else {
     @if (!alreadyPostedOnProduct()) {
     <div class="post-review">
@@ -97,7 +131,10 @@
                 <p>{{item.message}}</p>
             </div>
             <div class="actions">
-                <small>{{item.posted}}</small>
+                <small>{{item.edited}} | {{item.posted}}</small>
+                @if (userOwnThisReview(item.createdBy)) {
+                <button class="edit-review" (click)="markReview(item)">Ändra</button>
+                }
                 @if (userOwnThisReview(item.createdBy) || checkRole()) {
                 <button class="delete-review" (click)="deleteReview(item.id)">Ta bort</button>
                 }

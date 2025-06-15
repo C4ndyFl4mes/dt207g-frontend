@@ -30,6 +30,7 @@ export class CafeMenuDetailsComponent implements OnInit {
 
   loadingError = signal<string | null>(null); // Utifall det blir inladdningsfel.
 
+  currentReviewID = ""; // Den review som håller på att ändras.
   // Inmatningsfälten för recension.
   reviewInput = {
     rating: 3,
@@ -183,62 +184,21 @@ export class CafeMenuDetailsComponent implements OnInit {
     const ratingRange = Validation.range<number>(this.reviewInput.rating, "Betyg", 1, 5);
     if (ratingRange) this.errors().push(ratingRange);
 
-    const reviewRange = Validation.range<string>(this.reviewInput.message, "Recension", 1, 300);
+    const reviewRange = Validation.range<string>(this.reviewInput.message, "Recension", 1, 2000);
     if (reviewRange) this.errors().push(reviewRange);
 
     const reviewInjection = Validation.filterPossibleInjection(this.reviewInput.message, "Recension");
     if (reviewInjection) this.errors().push(reviewInjection);
 
     if (this.errors().length === 0) {
-      const token: string | null = this.accountService.getToken();
-      if (token) {
-        this.reviewService.postReview(token, this.product().id, this.reviewInput.rating, this.reviewInput.message).subscribe({
-          next: (response) => {
-            this.success.set({
-              success: response.success,
-              data: "",
-              message: "Recension tillagd."
-            });
-            this.loadProduct(); // Laddar om produkten och dess recensioner.
-            setTimeout(() => {
-              this.success.set({
-                success: false,
-                data: "",
-                message: ""
-              });
-            }, 1000);
-          },
-          error: (error) => {
-            this.errors().push(error.error.message);
-          }
-        });
-      } else {
-        console.log("Token är otillgänlig.");
-      }
-    }
-  }
-
-  /**
-   * Raderar en recension, skyddad av autentisering.
-   * @param id - vilket id recensionen har.
-   */
-  deleteReview(id: string): void {
-    this.success().success = false;
-    this.errors.set([]);
-    const token: string | null = this.accountService.getToken();
-    if (token) {
-      this.reviewService.deleteReview(token, id).subscribe({
+      this.reviewService.postReview(this.product().id, this.reviewInput.rating, this.reviewInput.message).subscribe({
         next: (response) => {
-          this.loadProduct();
-          this.reviewInput = {
-            rating: 3,
-            message: ""
-          }
           this.success.set({
             success: response.success,
             data: "",
-            message: "Recension raderad."
+            message: "Recension tillagd."
           });
+          this.loadProduct(); // Laddar om produkten och dess recensioner.
           setTimeout(() => {
             this.success.set({
               success: false,
@@ -250,20 +210,112 @@ export class CafeMenuDetailsComponent implements OnInit {
         error: (error) => {
           this.errors().push(error.error.message);
         }
-      })
-    } else {
-      console.log("Token är otillgänlig.");
+      });
     }
+  }
+
+  /**
+   * Markerar en recension inför ändring.
+   * @param review - vilken recension som ska markeras.
+   */
+  markReview(review: Review): void {
+    this.currentReviewID = review.id;
+    this.reviewInput = {
+      rating: review.rating,
+      message: review.message
+    }
+  }
+
+  /**
+   * Ändrar en recension.
+   */
+  editReview(): void {
+    this.success().success = false;
+    this.errors.set([]);
+
+    // Valideringar:
+    const ratingRange = Validation.range<number>(this.reviewInput.rating, "Betyg", 1, 5);
+    if (ratingRange) this.errors().push(ratingRange);
+
+    const reviewRange = Validation.range<string>(this.reviewInput.message, "Recension", 1, 2000);
+    if (reviewRange) this.errors().push(reviewRange);
+
+    const reviewInjection = Validation.filterPossibleInjection(this.reviewInput.message, "Recension");
+    if (reviewInjection) this.errors().push(reviewInjection);
+
+    if (this.errors().length === 0) {
+      this.reviewService.editReview(this.currentReviewID, this.reviewInput.rating, this.reviewInput.message).subscribe({
+        next: (response) => {
+          this.success.set({
+            success: response.success,
+            data: "",
+            message: "Recension ändrad."
+          });
+          this.loadProduct();
+          this.currentReviewID = "";
+          this.reviewInput = {
+            rating: 3,
+            message: ""
+          }
+          setTimeout(() => {
+            this.success.set({
+              success: false,
+              data: "",
+              message: ""
+            });
+          }, 1000);
+        },
+        error: (error) => {
+          this.errors().push(error.error.message);
+        }
+      });
+    }
+  }
+
+  /**
+   * Raderar en recension, skyddad av autentisering.
+   * @param id - vilket id recensionen har.
+   */
+  deleteReview(id: string): void {
+    this.success().success = false;
+    this.errors.set([]);
+    this.reviewService.deleteReview(id).subscribe({
+      next: (response) => {
+        this.loadProduct();
+        this.currentReviewID = "";
+        this.reviewInput = {
+          rating: 3,
+          message: ""
+        }
+        this.success.set({
+          success: response.success,
+          data: "",
+          message: "Recension raderad."
+        });
+        setTimeout(() => {
+          this.success.set({
+            success: false,
+            data: "",
+            message: ""
+          });
+        }, 1000);
+      },
+      error: (error) => {
+        this.errors().push(error.error.message);
+      }
+    });
   }
 
   /**
    * Återställer fälten för att lägga till en recension.
    */
   cancelPost(): void {
+    this.currentReviewID = "";
     this.reviewInput = {
       rating: 3,
       message: ""
     }
+    this.errors.set([]);
   }
 
   /**
@@ -290,7 +342,7 @@ export class CafeMenuDetailsComponent implements OnInit {
    * Kollar om användaren redan lagt till en recension. Används för att dölja lägga till recension.
    */
   postedAlready(): void {
-    this.reviewService.checkUserAlreadyPostedOnProduct(this.accountService.getToken()!, this.product().id).subscribe({
+    this.reviewService.checkUserAlreadyPostedOnProduct(this.product().id).subscribe({
       next: (response) => {
         this.alreadyPostedOnProduct.set(response.success);
       }, error: (error) => {

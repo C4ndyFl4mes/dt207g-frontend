@@ -32,8 +32,9 @@
             <textarea name="product-description" [(ngModel)]="product.description"></textarea>
         </label>
         <div class="actions">
+            <button type="button" (click)="cancel()">Avbryt</button>
+            <button type="button" (click)="editProduct()" [disabled]="id === ''">Ändra</button>
             <button type="button" (click)="createProduct()" [disabled]="id !== ''">Skapa</button>
-            <button type="button" (click)="editProduct()">Ändra</button>
         </div>
     </form>
     <app-form-message [success]="success()" [errors]="errors()"></app-form-message>
@@ -96,8 +97,9 @@
             <input type="text" name="category-name" [(ngModel)]="category.name">
         </label>
         <div class="actions">
+            <button type="button" (click)="cancel()">Avbryt</button>
+            <button type="button" (click)="editCategory()" [disabled]="categoryID === ''">Ändra</button>
             <button type="button" (click)="createCategory()" [disabled]="categoryID !== ''">Skapa</button>
-            <button type="button" (click)="editCategory()">Ändra</button>
         </div>
     </form>
     <app-form-message [success]="success()" [errors]="errors()"></app-form-message>

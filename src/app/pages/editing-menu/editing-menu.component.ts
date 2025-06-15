@@ -129,6 +129,18 @@ export class EditingMenuComponent implements OnInit {
     this.loadProducts();
   }
 
+  cancel(): void {
+    this.category.name = "";
+    this.categoryID = "";
+    this.id = "";
+    this.product = {
+      name: "",
+      price: "",
+      description: "",
+      categoryID: ""
+    }
+    this.errors.set([]);
+  }
 
   /**
   * Föregående menysida.
@@ -191,8 +203,6 @@ export class EditingMenuComponent implements OnInit {
 
     const nameRange = Validation.range<string>(product.name, "Produktnamn", 2, 100);
     if (nameRange) this.errors().push(nameRange);
-    const nameHasNumbers = Validation.unableToContainNumbers(product.name, "Produktnamn");
-    if (nameHasNumbers) this.errors().push(nameHasNumbers);
 
     const priceFormat = Validation.correctPriceFormat(product.price);
     if (priceFormat) this.errors().push(priceFormat);
@@ -243,8 +253,6 @@ export class EditingMenuComponent implements OnInit {
 
     const nameRange = Validation.range<string>(product.name, "Produktnamn", 2, 100);
     if (nameRange) this.errors().push(nameRange);
-    const nameHasNumbers = Validation.unableToContainNumbers(product.name, "Produktnamn");
-    if (nameHasNumbers) this.errors().push(nameHasNumbers);
 
     const priceFormat = Validation.correctPriceFormat(product.price);
     if (priceFormat) this.errors().push(priceFormat);
