@@ -1,0 +1,8 @@
+[build]
+  publish = "dist/dt207g-frontend/browser"
+  command = "ng build --configuration production"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
