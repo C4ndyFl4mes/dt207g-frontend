@@ -38,7 +38,7 @@ export class CafeService {
 
 
   createCategory(name: string): Observable<Response<{ category: Category }>> {
-    return this.http.post<Response<{ category: Category }>>(`${this.url}/create-category`, { name }, {
+    return this.http.post<Response<{ category: Category }>>(`${this.url}/category`, { name }, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -47,7 +47,7 @@ export class CafeService {
   }
 
   editCategory(id: string, name: string): Observable<Response<{ category: Category }>> {
-    return this.http.put<Response<{ category: Category }>>(`${this.url}/edit-category/${id}`, { name }, {
+    return this.http.put<Response<{ category: Category }>>(`${this.url}/category/${id}`, { name }, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -56,7 +56,7 @@ export class CafeService {
   }
 
   deleteCategory(id: string): Observable<Response<{ category: Category }>> {
-    return this.http.delete<Response<{ category: Category }>>(`${this.url}/delete-category/${id}`, {
+    return this.http.delete<Response<{ category: Category }>>(`${this.url}/category/${id}`, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -65,7 +65,7 @@ export class CafeService {
   }
 
   createProduct(name: string, price: number, description: string, categoryID: string): Observable<Response<null>> {
-    return this.http.post<Response<null>>(`${this.url}/create-product`, { name, price, description, inCategory: categoryID }, {
+    return this.http.post<Response<null>>(`${this.url}/product`, { name, price, description, inCategory: categoryID }, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -74,7 +74,7 @@ export class CafeService {
   }
 
   editProduct(id: string, name: string, price: number, description: string, categoryID: string): Observable<Response<null>> {
-    return this.http.put<Response<null>>(`${this.url}/edit-product/${id}`, { name, price, description, inCategory: categoryID }, {
+    return this.http.put<Response<null>>(`${this.url}/product/${id}`, { name, price, description, inCategory: categoryID }, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -83,7 +83,7 @@ export class CafeService {
   }
 
   deleteProduct(id: string): Observable<Response<null>> {
-    return this.http.delete<Response<null>>(`${this.url}/delete-product/${id}`, {
+    return this.http.delete<Response<null>>(`${this.url}/product/${id}`, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`

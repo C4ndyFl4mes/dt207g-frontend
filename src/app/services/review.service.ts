@@ -21,7 +21,7 @@ export class ReviewService {
    * @returns success, message, data: {review}.
    */
   postReview(productID: string, rating: number, message: string): Observable<Response<{review: Review}>> {
-    return this.http.post<Response<{review: Review}>>(`${this.url}/post/${productID}`, { rating: rating, message: message }, {
+    return this.http.post<Response<{review: Review}>>(`${this.url}/review/${productID}`, { rating: rating, message: message }, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -37,7 +37,7 @@ export class ReviewService {
    * @returns 
    */
   editReview(reviewID: string, rating: number, message: string): Observable<any> {
-    return this.http.put<any>(`${this.url}/edit/${reviewID}`, { rating, message}, {
+    return this.http.put<any>(`${this.url}/review/${reviewID}`, { rating, message}, {
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
@@ -51,7 +51,7 @@ export class ReviewService {
    * @returns success, message, data: null.
    */
   deleteReview(reviewID: string): Observable<Response<null>> {
-    return this.http.delete<Response<null>>(`${this.url}/delete/${reviewID}`, { 
+    return this.http.delete<Response<null>>(`${this.url}/review/${reviewID}`, { 
       headers: {
         "content-type": "application/json",
         "authorization": `Bearer ${this.accountService.getToken()}`
