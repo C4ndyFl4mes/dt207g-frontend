@@ -12,8 +12,8 @@ export class AccountService {
   private loggedIn = new BehaviorSubject<boolean>(false); 
   public isLoggedIn = this.loggedIn.asObservable(); // Denna anropas för att veta om användaren är inloggad.
 
-  private authURL: string = "http://localhost:3000/api/auth"; // För registrering och inloggning.
-  private usersURL: string = "http://localhost:3000/api/users"; // För att hantera användare i allmänhet.
+  private authURL: string = "https://rymdrosten.onrender.com/api/auth"; // För registrering och inloggning.
+  private usersURL: string = "https://rymdrosten.onrender.com/api/users"; // För att hantera användare i allmänhet.
 
   constructor(private http: HttpClient) {
     this.checkInitialLogin(); // Anropas för att kolla inloggningsstatusen i tidigt läge.

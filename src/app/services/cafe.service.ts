@@ -13,7 +13,7 @@ import { AccountService } from './account.service';
 })
 export class CafeService {
 
-  url: string = "http://localhost:3000/api/menu";
+  url: string = "https://rymdrosten.onrender.com/api/menu";
 
   constructor(private http: HttpClient, private accountService: AccountService) { }
 

@@ -10,7 +10,7 @@ import { AccountService } from './account.service';
 })
 export class ReviewService {
 
-  url = "http://localhost:3000/api/reviews";
+  url = "https://rymdrosten.onrender.com/api/reviews";
   constructor(private http: HttpClient, private accountService: AccountService) { }
 
   /**

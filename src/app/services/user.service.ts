@@ -12,8 +12,8 @@ import { Review } from '../models/review';
 })
 export class UserService {
 
-  url: string = "http://localhost:3000/api/users";
-  rootURL: string = "http://localhost:3000/api/auth/root/register";
+  url: string = "https://rymdrosten.onrender.com/api/users";
+  rootURL: string = "https://rymdrosten.onrender.com/api/auth/root/register";
 
   constructor(private http: HttpClient, private accountService: AccountService) { }
 
