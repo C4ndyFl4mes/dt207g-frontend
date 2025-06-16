@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/dt207g-frontend/browser"
+  publish = "dist/cafe/browser"
   command = "ng build --configuration production"
 
 [[redirects]]
